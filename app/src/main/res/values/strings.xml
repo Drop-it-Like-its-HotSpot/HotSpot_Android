@@ -2,8 +2,26 @@
 <resources>
 
     <string name="app_name">HotSpot</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_create_account">CreateAccountActivity</string>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+
+    <string name="login_button">Log In</string>
+    <string name="login_failure">Login information was not correct, please try again</string>
+
+    <string name="create_account">Create Account</string>
+    <string name="create_account_username">Username (Not Permanent)</string>
+    <string name="create_account_submit">Create the Account</string>
+    <string name="password_repeat">Repeat Password</string>
+    <string name="create_account_creation_server_failure">Your account was not able to be created on the server, please try again later</string>
+    <string name="create_account_email_invalid">Submitted email was not valid</string>
+    <string name="create_account_username_invalid">Submitted username was not valid</string>
+    <string name="create_account_password_invalid">Submitted password was not valid</string>
+    <string name="create_account_password_not_equal">Submitted passwords were not equal</string>
+    <string name="create_account_email_exists_in_db">Submitted email is already taken</string>
+
+    <string name="title_activity_create_account">HotSpot - Create Account</string>
+    <string name="title_activity_main">HotSpot - Chatroom Map</string>
 
 </resources>
