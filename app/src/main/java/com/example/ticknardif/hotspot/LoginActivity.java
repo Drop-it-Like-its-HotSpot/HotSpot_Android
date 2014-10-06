@@ -83,7 +83,7 @@ public class LoginActivity extends Activity {
 
     private boolean checkPassword(String email, String password) {
         //TODO: Change this when database is functional
-        if(email.equals("test") && password.equals("test")) return true;
+        if(email.equals("a") && password.equals("a")) return true;
         return false;
     }
 
