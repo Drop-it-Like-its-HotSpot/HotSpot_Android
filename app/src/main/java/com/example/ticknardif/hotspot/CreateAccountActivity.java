@@ -16,13 +16,27 @@ import android.widget.Toast;
 
 import com.example.ticknardif.hotspot.R;
 
+import java.util.UUID;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 public class CreateAccountActivity extends Activity implements View.OnFocusChangeListener {
     private ArrayAdapter adapter;
+    private RestAdapter restAdapter;
+    private  WebService webService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
+
+        restAdapter = new RestAdapter.Builder()
+                .setServer("http://54.172.35.180:8080")
+                .build();
+        webService = restAdapter.create(WebService.class);
 
         EditText editText = (EditText) findViewById(R.id.create_account_email);
         editText.setOnFocusChangeListener(this);
@@ -75,9 +89,9 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
 
     public void createAccount(View view) {
         // Get all the user information from the view
-        String email = ((EditText)findViewById(R.id.create_account_email)).getText().toString();
+        final String email = ((EditText)findViewById(R.id.create_account_email)).getText().toString();
         String username = ((EditText)findViewById(R.id.create_account_username)).getText().toString();
-        String password = ((EditText)findViewById(R.id.create_account_password)).getText().toString();
+        final String password = ((EditText)findViewById(R.id.create_account_password)).getText().toString();
         String passwordRepeat = ((EditText)findViewById(R.id.create_account_password_repeat)).getText().toString();
 
         // Clear the error list
@@ -110,10 +124,10 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
         }
 
         // If the email already exists on the server, do nothing
-        if(emailExistsInDatabase(email)) {
+        /*if(emailExistsInDatabase(email)) {
             addErrorToList(getString(R.string.create_account_email_exists_in_db));
             errorOccurred = true;
-        }
+        }*/
 
         // Don't try to create the account if an error occurred
         if (errorOccurred) return;
@@ -123,8 +137,28 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
 
         // If the account was created successfully, go to the Main activity
         if(creationSuccessful) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+           //TODO:Use actual location for Longitude and Latitude
+
+            //Create a user using Web Server and RetroFit
+            webService.createUser(email, password, username, 5.0 , 100.0 , 200.0, new Callback<UserResponse>() {
+                @Override
+                public void success(UserResponse user, Response response) {
+                    if(user.success)
+                    {
+                        Log.d("User Created",user.toString());
+                        login(email,password);
+                    }
+                    else
+                    {
+                        Log.e("User", "User not created!!");
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e("HTTP Error", error.toString());
+                }
+            });
         }
 
         // If the account was not created, alert the user with a toast that it failed
@@ -136,6 +170,45 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
         }
+    }
+
+    //Log User in to get session
+    public void login(String email, String password){
+        webService.login(email,password, new Callback<LoginResponse>() {
+            @Override
+            public void success(LoginResponse loginResponse, Response response) {
+                if(loginResponse.success)
+                {
+                    Log.d("Login Response",loginResponse.toString());
+
+                    startMain(loginResponse.session_id);
+                }
+                else
+                {
+                    Context context = getApplicationContext();
+                    CharSequence text = getString(R.string.login_failure);
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("HTTP Error", error.toString());
+            }
+        });
+    }
+
+    //Start Main Activity with Session Information
+    public void startMain(UUID session)
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        Bundle data = new Bundle();
+        data.putString("session",session.toString());
+        intent.putExtras(data);
+        startActivity(intent);
     }
 
     // Add the string parameter to the error list

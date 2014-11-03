@@ -14,14 +14,26 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.UUID;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 
 public class LoginActivity extends Activity {
 
+    private RestAdapter restAdapter;
+    private  WebService webService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        restAdapter = new RestAdapter.Builder()
+                    .setServer("http://54.172.35.180:8080")
+                    .build();
+        webService = restAdapter.create(WebService.class);
         // Set the 'Done' key in password EditText keyboard input to call logIn method
         final EditText passwordEdit = (EditText) findViewById(R.id.login_password);
         passwordEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -60,31 +72,46 @@ public class LoginActivity extends Activity {
         String email = ((EditText)findViewById(R.id.login_email)).getText().toString();
         String password = ((EditText)findViewById(R.id.login_password)).getText().toString();
 
-        boolean correctLogin = checkPassword(email, password);
-
-        if(correctLogin) {
-            // Go to MainActivity, map or list based on local settings
-
-            //TODO: Save this information in cached data or something
-
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
-        else {
-            // Make a toast saying that the login information was not correct
-            Context context = getApplicationContext();
-            CharSequence text = getString(R.string.login_failure);
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-        }
+        checkPassword(email, password);
     }
 
-    private boolean checkPassword(String email, String password) {
-        //TODO: Change this when database is functional
-        if(email.equals("a") && password.equals("a")) return true;
-        return false;
+    //Start Main Activity with Session Information
+    public void startMain(UUID session)
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        Bundle data = new Bundle();
+        data.putString("session",session.toString());
+        intent.putExtras(data);
+        startActivity(intent);
+    }
+
+    private void checkPassword(String email, String password) {
+        //Login User and get Session
+        webService.login(email,password, new Callback<LoginResponse>() {
+            @Override
+            public void success(LoginResponse loginResponse, Response response) {
+                if(loginResponse.success)
+                {
+                    Log.d("Login Response",loginResponse.toString());
+
+                    startMain(loginResponse.session_id);
+                }
+                else
+                {
+                    Context context = getApplicationContext();
+                    CharSequence text = getString(R.string.login_failure);
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("HTTP Error", error.toString());
+            }
+        });
     }
 
     public void goToCreateAccount(View view) {

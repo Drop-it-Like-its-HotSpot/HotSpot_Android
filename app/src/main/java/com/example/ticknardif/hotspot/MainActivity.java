@@ -16,6 +16,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Bundle bundle = this.getIntent().getExtras();
+        String session = bundle.getString("session");
 
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.main_map)).getMap();
         map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
