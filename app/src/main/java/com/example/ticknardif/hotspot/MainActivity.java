@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends Activity {
     private GoogleMap map;
@@ -77,7 +78,13 @@ public class MainActivity extends Activity {
 
 
         HotSpotAPI API = new HotSpotAPI(payload, "post");
-        String result = API.execute("http://54.172.35.180/api/chatroom").get();
+        try {
+            String result = API.execute("http://54.172.35.180/api/chatroom").get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setLocation(Location location) {
@@ -136,6 +143,7 @@ public class MainActivity extends Activity {
 
                 return result;
             }
+            return result;
         }
 
         protected void onPostExecute(String result) {
