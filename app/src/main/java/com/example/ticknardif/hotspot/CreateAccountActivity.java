@@ -73,18 +73,6 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
         }
 
         String email = ((EditText)findViewById(R.id.create_account_email)).getText().toString();
-        boolean emailExists = emailExistsInDatabase(email);
-
-        if(emailExists) {
-            adapter.clear();
-            addErrorToList(getString(R.string.create_account_email_exists_in_db));
-        }
-    }
-
-    // Check if the email exists in the database or not
-    private boolean emailExistsInDatabase(String email) {
-       //TODO: Check if this email already exists in the database or not
-       return true;
     }
 
     public void createAccount(View view) {
@@ -150,7 +138,9 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
                     }
                     else
                     {
-                        Log.e("User", "User not created!!");
+                        Log.e("User", "User not created!! Please enter different Email ID");
+                        addErrorToList(getString(R.string.create_account_email_invalid));
+                        return;
                     }
                 }
 
