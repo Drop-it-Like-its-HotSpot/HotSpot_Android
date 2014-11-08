@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.example.ticknardif.hotspot.R;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -36,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import static com.google.android.gms.common.GooglePlayServicesUtil.isGooglePlayServicesAvailable;
+
 public class MainActivity extends Activity {
     private GoogleMap map;
     private LatLng myLatLng;
@@ -46,7 +49,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         Bundle bundle = this.getIntent().getExtras();
         String session = bundle.getString("session");
-
+        if(isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS) {
+            Log.d("Available: ", "Worked!!");
+        }
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 setLocation(location);
@@ -77,14 +82,14 @@ public class MainActivity extends Activity {
         //new HotSpotAPI(payload, "post").execute("http://54.172.35.180/api/chatroom");
 
 
-        HotSpotAPI API = new HotSpotAPI(payload, "post");
+        /*HotSpotAPI API = new HotSpotAPI(payload, "post");
         try {
             String result = API.execute("http://54.172.35.180/api/chatroom").get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void setLocation(Location location) {
