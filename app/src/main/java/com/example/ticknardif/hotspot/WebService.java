@@ -1,5 +1,6 @@
 package com.example.ticknardif.hotspot;
 
+import java.util.List;
 import java.util.UUID;
 
 import retrofit.Callback;
@@ -36,6 +37,9 @@ public interface WebService {
 
     @GET("/api/chatroom/user_id/{session_id}")
     void getUsersInChatroom(@Path("session_id") String session_id, Callback<ChatroomUserResponse> res);
+
+    @GET("/api/chatroom/{session_id}")
+    void getChatrooms(@Path("session_id") String session_id, Callback<List<ChatroomResponse>> res);
 
 
 }
