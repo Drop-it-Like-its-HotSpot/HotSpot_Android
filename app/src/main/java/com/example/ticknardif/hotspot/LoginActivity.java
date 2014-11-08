@@ -52,6 +52,7 @@ public class LoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         context = getApplicationContext();
@@ -71,6 +72,7 @@ public class LoginActivity extends Activity {
                     .setServer("http://54.172.35.180:8080")
                     .build();
         webService = restAdapter.create(WebService.class);
+
         // Set the 'Done' key in password EditText keyboard input to call logIn method
         final EditText passwordEdit = (EditText) findViewById(R.id.login_password);
         passwordEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -109,7 +111,7 @@ public class LoginActivity extends Activity {
         String email = ((EditText)findViewById(R.id.login_email)).getText().toString();
         String password = ((EditText)findViewById(R.id.login_password)).getText().toString();
 
-        checkPassword(email, password);
+        checkPassword(email, password, false);
     }
 
     //Start Main Activity with Session Information
@@ -120,9 +122,12 @@ public class LoginActivity extends Activity {
         data.putString("session",session.toString());
         intent.putExtras(data);
         startActivity(intent);
+
+        // Remove this activity from the Activity stack so the user cannot go back to this
+        finish();
     }
 
-    private void checkPassword(String email, String password) {
+    private void checkPassword(final String email, final String password, final boolean usingPreferences) {
         //Login User and get Session
         webService.login(email,password, new Callback<LoginResponse>() {
             @Override
@@ -130,6 +135,19 @@ public class LoginActivity extends Activity {
                 if(loginResponse.success)
                 {
                     Log.d("Login Response",loginResponse.toString());
+
+                    // If we are logging in with user input, save it in the preferences
+                    if(!usingPreferences) {
+                        // Save the user data in SharedPreferences
+                        Context context = getBaseContext();
+                        SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
+
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString(getString(R.string.shared_pref_email), email);
+                        editor.putString(getString(R.string.shared_pref_password), password);
+                        editor.putString(getString(R.string.shared_pref_session_id), loginResponse.session_id.toString());
+                        editor.apply();
+                    }
 
                     startMain(loginResponse.session_id);
                 }

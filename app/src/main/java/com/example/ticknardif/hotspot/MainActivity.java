@@ -2,6 +2,7 @@ package com.example.ticknardif.hotspot;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -54,6 +56,7 @@ public class MainActivity extends Activity {
         }
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
+                Log.d("Debug", "The User's location changed");
                 setLocation(location);
                 LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
             }
@@ -64,99 +67,36 @@ public class MainActivity extends Activity {
         };
 
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, locationListener, null);
+        Log.d("Debug", "Requesting location update");
+        locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
 
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.main_map)).getMap();
 
-        LatLng cr_latlng = new LatLng(29.64726, -82.33524);
-        int cr_admin = 1;
-        String cr_title = "Nick's Chatroom";
-        String cr_desc = "Katy Perry, Programming, Deep Fried Foods, Beer";
+        Context context = getBaseContext();
+        SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
+        String email = sharedPref.getString(getString(R.string.shared_pref_email), "No Email Set");
+        String password = sharedPref.getString(getString(R.string.shared_pref_password), "No Password Set");
+        String sessionID = sharedPref.getString(getString(R.string.shared_pref_session_id), "No SessionID Set");
 
-        List<NameValuePair> payload = new ArrayList<NameValuePair>(5);
-        payload.add(new BasicNameValuePair("latitude", Double.toString(cr_latlng.latitude)));
-        payload.add(new BasicNameValuePair("longitude", Double.toString(cr_latlng.longitude)));
-        payload.add(new BasicNameValuePair("room_admin", Integer.toString(cr_admin)));
-        payload.add(new BasicNameValuePair("chat_title", cr_title));
-        payload.add(new BasicNameValuePair("chat_dscrpn", cr_desc));
-        //new HotSpotAPI(payload, "post").execute("http://54.172.35.180/api/chatroom");
-
-
-        /*HotSpotAPI API = new HotSpotAPI(payload, "post");
-        try {
-            String result = API.execute("http://54.172.35.180/api/chatroom").get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }*/
+        Log.d("Debug", "Saved email :" + email);
+        Log.d("Debug", "Saved password :" + password);
+        Log.d("Debug", "Saved sessionID :" + sessionID);
     }
 
     public void setLocation(Location location) {
+        LatLng[] testChatrooms = new LatLng[3];
+        testChatrooms[0] = new LatLng(29.647089f, -82.345898f);
+        testChatrooms[1] = new LatLng(29.642409f, -82.345190f);
+        testChatrooms[2] = new LatLng(29.645374f, -82.340899f);
+
         myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
+
+        int index = 1;
+        for (LatLng pos : testChatrooms){
+            map.addMarker(new MarkerOptions().position(pos).title("Test Chatroom" + Integer.toString(index++)));
+        }
     }
-
-    private class HotSpotAPI extends AsyncTask<String, Void, String> {
-
-        List<NameValuePair> payload;
-        String type;
-
-        protected HotSpotAPI(List<NameValuePair> payload, String type) {
-            this.payload = payload;
-            this.type = type;
-        }
-
-        protected String doInBackground(String... urls) {
-            HttpClient httpClient = new DefaultHttpClient();
-            String result = "No Action Taken";
-
-            // Handle GETs
-            if(type == "get" || type == "GET") {
-                try {
-                    HttpGet get = new HttpGet(urls[0]);
-
-                    HttpResponse httpResponse = httpClient.execute(get);
-                    HttpEntity httpEntity = httpResponse.getEntity();
-                    result = EntityUtils.toString(httpEntity);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            // Handle POSTs
-            if(type == "post" || type == "POST") {
-                HttpPost httpPost = new HttpPost(urls[0]);
-                result = "Chatroom creation was a failure";
-                try {
-
-                    httpPost.setEntity(new UrlEncodedFormEntity(payload));
-
-                    HttpResponse response = httpClient.execute(httpPost);
-                    Log.d("Debug", "Got here 8");
-
-                    result = "Creating chatroom was a success";
-
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                return result;
-            }
-            return result;
-        }
-
-        protected void onPostExecute(String result) {
-            Log.d("Debug", result);
-        }
-
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
