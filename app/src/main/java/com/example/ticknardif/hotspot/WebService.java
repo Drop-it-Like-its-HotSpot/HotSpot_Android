@@ -30,7 +30,13 @@ public interface WebService {
     @POST("/api/chatroom")
     void createChatroom(@Field("room_admin") String email, @Field("chat_title") String password,
                         @Field("displayname") String name, @Field("chat_dscrpn") double radius,
-                        @Field("longitude") double longitude,@Field("latitude") double latitude, Callback<ChatRoomCreationResponse> res);
+                        @Field("longitude") double longitude,@Field("latitude") double latitude,
+                        @Field("session_id") String session_id, Callback<ChatRoomCreationResponse> res);
+
+
+    @FormUrlEncoded
+    @POST("/api/gcm")
+    void regGCM(@Path("session_id") String session_id, Callback<GCMResponse> res);
 
     @GET("/api/chatroom/{chatroom_id}/{session_id}")
     void getUsersInChatroom(@Path("chatroom_id") int chatroom_id, @Path("session_id") String session_id, Callback<ChatroomUserResponse> res);
