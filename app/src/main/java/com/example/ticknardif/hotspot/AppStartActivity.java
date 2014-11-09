@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.ticknardif.hotspot.util.SystemUiHider;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -26,6 +29,8 @@ public class AppStartActivity extends Activity {
     private RestAdapter restAdapter;
     private  WebService webService;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +43,7 @@ public class AppStartActivity extends Activity {
         webService = restAdapter.create(WebService.class);
 
         Context context = getBaseContext();
+
         SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
         String email = sharedPref.getString(getString(R.string.shared_pref_email), "");
         String password = sharedPref.getString(getString(R.string.shared_pref_password), "");

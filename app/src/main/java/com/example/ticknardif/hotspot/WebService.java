@@ -36,7 +36,7 @@ public interface WebService {
 
     @FormUrlEncoded
     @POST("/api/gcm")
-    void regGCM(@Path("session_id") String session_id, Callback<GCMResponse> res);
+    void regGCM(@Field("session_id") String session_id,@Field("reg_id") String reg_id, Callback<GCMResponse> res);
 
     @GET("/api/chatroom/{chatroom_id}/{session_id}")
     void getUsersInChatroom(@Path("chatroom_id") int chatroom_id, @Path("session_id") String session_id, Callback<ChatroomUserResponse> res);
