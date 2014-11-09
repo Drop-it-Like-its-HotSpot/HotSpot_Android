@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.example.ticknardif.hotspot.util.SystemUiHider;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.UUID;
 
@@ -25,10 +29,25 @@ import retrofit.client.Response;
 public class AppStartActivity extends Activity {
     private RestAdapter restAdapter;
     private  WebService webService;
+    private LatLng myLatLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        LocationListener locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                Log.d("Debug", "AppStart: The User's location changed");
+                myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+            public void onProviderEnabled(String provider) {}
+            public void onProviderDisabled(String provider) {}
+        };
+
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
 
         setContentView(R.layout.activity_app_start);
 
@@ -45,7 +64,6 @@ public class AppStartActivity extends Activity {
         // If email and password are saved in the preferences, automatically log in
         if (email != null && password != null) {
             // Trying to automatically log in
-            Log.d("Debug", "Logging in with user preferences");
             checkPassword(email, password, true);
         } else {
             startLoginActivity();
@@ -82,7 +100,10 @@ public class AppStartActivity extends Activity {
         Intent intent = new Intent(this, MainActivity.class);
         Bundle data = new Bundle();
         data.putString("session",session.toString());
+        data.putDouble("Latitude", myLatLng.latitude);
+        data.putDouble("Longitude", myLatLng.longitude);
         intent.putExtras(data);
+
         startActivity(intent);
 
         // Remove this activity from the Activity stack so the user cannot go back to this

@@ -54,22 +54,11 @@ public class MainActivity extends Activity {
         if(isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS) {
             Log.d("Available: ", "Worked!!");
         }
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                Log.d("Debug", "The User's location changed");
-                setLocation(location);
-                LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
-            public void onProviderEnabled(String provider) {}
-            public void onProviderDisabled(String provider) {}
-        };
 
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        Log.d("Debug", "Requesting location update");
-        locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
 
+
+        Bundle extras = getIntent().getExtras();
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.main_map)).getMap();
 
         Context context = getBaseContext();
@@ -78,19 +67,35 @@ public class MainActivity extends Activity {
         String password = sharedPref.getString(getString(R.string.shared_pref_password), "No Password Set");
         String sessionID = sharedPref.getString(getString(R.string.shared_pref_session_id), "No SessionID Set");
 
-        Log.d("Debug", "Saved email :" + email);
-        Log.d("Debug", "Saved password :" + password);
-        Log.d("Debug", "Saved sessionID :" + sessionID);
+        Double lat = extras.getDouble("Latitude");
+        Double lng = extras.getDouble("Longitude");
+        if(lat != null && lng != null) {
+            myLatLng = new LatLng(lat, lng);
+            setLocation();
+        }
+        else {
+            LocationListener locationListener = new LocationListener() {
+                public void onLocationChanged(Location location) {
+                    myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    setLocation();
+                }
+
+                public void onStatusChanged(String provider, int status, Bundle extras) {}
+                public void onProviderEnabled(String provider) {}
+                public void onProviderDisabled(String provider) {}
+            };
+
+            locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
+        }
     }
 
-    public void setLocation(Location location) {
+    public void setLocation() {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
+
         LatLng[] testChatrooms = new LatLng[3];
         testChatrooms[0] = new LatLng(29.647089f, -82.345898f);
         testChatrooms[1] = new LatLng(29.642409f, -82.345190f);
         testChatrooms[2] = new LatLng(29.645374f, -82.340899f);
-
-        myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
 
         int index = 1;
         for (LatLng pos : testChatrooms){
