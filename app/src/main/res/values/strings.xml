@@ -9,8 +9,9 @@
     <string name="shared_pref_session_id">Session ID</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="login_button">Log In</string>
+    <string name="login_button">Login</string>
     <string name="login_failure">Login information was not correct, please try again</string>
+    <string name="logout">Log Out</string>
     <string name="create_account">Create Account</string>
     <string name="create_account_username">Username (Not Permanent)</string>
     <string name="create_account_submit">Create the Account</string>

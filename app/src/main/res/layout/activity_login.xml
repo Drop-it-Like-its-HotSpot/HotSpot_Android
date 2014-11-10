@@ -31,7 +31,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="logIn"
+        android:onClick="login"
         android:text="@string/login_button"/>
 
     <RelativeLayout
@@ -41,7 +41,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="goToCreateAccount"
+            android:onClick="startCreateAccountActivity"
             android:layout_alignParentBottom="true"
             android:text="@string/create_account"/>
 

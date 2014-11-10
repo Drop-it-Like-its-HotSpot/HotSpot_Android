@@ -29,7 +29,7 @@ import retrofit.client.Response;
 public class AppStartActivity extends Activity {
     private RestAdapter restAdapter;
     private  WebService webService;
-    private LatLng myLatLng;
+    private SharedPreferences sharedPref;
 
     // Create the AppStart login callback
     private Callback<LoginResponse> loginResponseCallback = new Callback<LoginResponse>() {
@@ -57,12 +57,22 @@ public class AppStartActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_start);
 
+        // Get the user information and last known location from SharedPreferences
+        Context context = getBaseContext();
+        sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
+        String email = sharedPref.getString(getString(R.string.shared_pref_email), "");
+        String password = sharedPref.getString(getString(R.string.shared_pref_password), "");
+
         // Instantiate the LocationManager and Location listener
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 Log.d("Debug", "AppStart: The User's location changed");
-                myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putLong("Latitude", Double.doubleToRawLongBits(location.getLatitude()));
+                editor.putLong("Longitude", Double.doubleToRawLongBits(location.getLongitude()));
+                editor.apply();
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {}
@@ -78,13 +88,6 @@ public class AppStartActivity extends Activity {
                 .setServer("http://54.172.35.180:8080")
                 .build();
         webService = restAdapter.create(WebService.class);
-
-        // Get the user information and last known location from SharedPreferences
-        Context context = getBaseContext();
-        SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
-        String email = sharedPref.getString(getString(R.string.shared_pref_email), "");
-        String password = sharedPref.getString(getString(R.string.shared_pref_password), "");
-        //TODO: Get last known location
 
         // If we have the user email and password, try to log in
         if (email != null && password != null) {
@@ -107,8 +110,6 @@ public class AppStartActivity extends Activity {
         // Put the Session and Location information into the bundle
         Bundle data = new Bundle();
         data.putString("session",session.toString());
-        data.putDouble("Latitude", myLatLng.latitude);
-        data.putDouble("Longitude", myLatLng.longitude);
         intent.putExtras(data);
 
         startActivity(intent);
@@ -121,6 +122,7 @@ public class AppStartActivity extends Activity {
     public void startLoginActivity()
     {
         Intent intent = new Intent(this, LoginActivity.class);
+
         startActivity(intent);
 
         // Remove this activity from the Activity stack so the user cannot go back to this
