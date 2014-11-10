@@ -31,10 +31,34 @@ public class AppStartActivity extends Activity {
     private  WebService webService;
     private LatLng myLatLng;
 
+    // Create the AppStart login callback
+    private Callback<LoginResponse> loginResponseCallback = new Callback<LoginResponse>() {
+        @Override
+        public void success(LoginResponse loginResponse, Response response) {
+            if (loginResponse.success) {
+                Log.d("Debug", "AppStart: Logged in with user preferences");
+                startMainActivity(loginResponse.session_id);
+            }
+            else {
+                Log.d("Debug", "User preferences were not found or didn't work");
+                startLoginActivity();
+            }
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            Log.e("HTTP Error", error.toString());
+            startLoginActivity();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_app_start);
 
+        // Instantiate the LocationManager and Location listener
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 Log.d("Debug", "AppStart: The User's location changed");
@@ -46,58 +70,41 @@ public class AppStartActivity extends Activity {
             public void onProviderDisabled(String provider) {}
         };
 
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        // Get the current GPS coordinates of the user
         locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
 
-        setContentView(R.layout.activity_app_start);
-
+        // Instantiate our REST API
         restAdapter = new RestAdapter.Builder()
                 .setServer("http://54.172.35.180:8080")
                 .build();
         webService = restAdapter.create(WebService.class);
 
+        // Get the user information and last known location from SharedPreferences
         Context context = getBaseContext();
         SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
         String email = sharedPref.getString(getString(R.string.shared_pref_email), "");
         String password = sharedPref.getString(getString(R.string.shared_pref_password), "");
+        //TODO: Get last known location
 
-        // If email and password are saved in the preferences, automatically log in
+        // If we have the user email and password, try to log in
         if (email != null && password != null) {
-            // Trying to automatically log in
-            checkPassword(email, password, true);
-        } else {
+            login(email, password);
+        } else { // Else, open the LoginActivity
             startLoginActivity();
         }
     }
 
-    private void checkPassword(final String email, final String password, final boolean usingPreferences) {
-        //Login User and get Session
-        webService.login(email, password, new Callback<LoginResponse>() {
-            @Override
-            public void success(LoginResponse loginResponse, Response response) {
-                if (loginResponse.success) {
-                    Log.d("Debug", "Logging in with user preferences");
-
-                    startMainActivity(loginResponse.session_id);
-                }
-                else {
-                    Log.d("Debug", "User preferences were not found or didn't work");
-                    startLoginActivity();
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e("HTTP Error", error.toString());
-                startLoginActivity();
-            }
-        });
+    // Call the API to try and log the user in
+    private void login(final String email, final String password) {
+        webService.login(email, password, loginResponseCallback);
     }
 
-    //Start Main Activity with Session Information
+    //Start Main Activity with Session + Location Information
     public void startMainActivity(UUID session)
     {
         Intent intent = new Intent(this, MainActivity.class);
+
+        // Put the Session and Location information into the bundle
         Bundle data = new Bundle();
         data.putString("session",session.toString());
         data.putDouble("Latitude", myLatLng.latitude);
@@ -110,7 +117,7 @@ public class AppStartActivity extends Activity {
         finish();
     }
 
-    //Start Main Activity with Session Information
+    //Start Login Activity
     public void startLoginActivity()
     {
         Intent intent = new Intent(this, LoginActivity.class);
