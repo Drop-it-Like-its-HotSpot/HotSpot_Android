@@ -2,6 +2,7 @@ package com.example.ticknardif.hotspot;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -73,7 +74,11 @@ public class MainActivity extends Activity {
 
     private GoogleMap map;
     private LatLng myLatLng;
+
     private String session;
+
+    private SharedPreferences sharedPref;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,18 +94,42 @@ public class MainActivity extends Activity {
         if (checkPlayServices()) {
             gcm = GoogleCloudMessaging.getInstance(this);
             regid = getRegistrationId(context);
-
+            Log.i("reg_id Pref",regid);
             if (regid.isEmpty()) {
                 registerInBackground();
             }
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
+
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+
+        Bundle extras = getIntent().getExtras();
+        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.main_map)).getMap();
+        populateMapWithFakeData();
+
+        Context context = getBaseContext();
+        sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
+        String email = sharedPref.getString(getString(R.string.shared_pref_email), "No Email Set");
+        String password = sharedPref.getString(getString(R.string.shared_pref_password), "No Password Set");
+        String sessionID = sharedPref.getString(getString(R.string.shared_pref_session_id), "No SessionID Set");
+
+        // If there is a location stored in the preferences, center the map on it
+        if(getLocationFromPreferences()) {
+           setLocation();
+        }
+
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                Log.d("Debug", "The User's location changed");
-                setLocation(location);
-                LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
+                myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+                setLocation();
+
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putLong("Latitude", Double.doubleToRawLongBits(location.getLatitude()));
+                editor.putLong("Longitude", Double.doubleToRawLongBits(location.getLongitude()));
+                editor.apply();
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {}
@@ -108,21 +137,24 @@ public class MainActivity extends Activity {
             public void onProviderDisabled(String provider) {}
         };
 
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        Log.d("Debug", "Requesting location update");
         locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
+    }
 
-        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.main_map)).getMap();
+    public void setLocation() {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
+    }
 
-        Context context = getBaseContext();
-        SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
-        String email = sharedPref.getString(getString(R.string.shared_pref_email), "No Email Set");
-        String password = sharedPref.getString(getString(R.string.shared_pref_password), "No Password Set");
-        String sessionID = sharedPref.getString(getString(R.string.shared_pref_session_id), "No SessionID Set");
+    private boolean getLocationFromPreferences() {
+        boolean success = false;
+        Long lat = sharedPref.getLong("Latitude", 0);
+        Long lng = sharedPref.getLong("Longitude", 0);
+        if(lat != 0 && lng !=0) {
+            Log.d("Debug", "Retrieved GPS coordinates from SharedPreferences");
+            myLatLng = new LatLng(Double.longBitsToDouble(lat), Double.longBitsToDouble(lng));
+            success = true;
+        }
 
-        Log.d("Debug", "Saved email :" + email);
-        Log.d("Debug", "Saved password :" + password);
-        Log.d("Debug", "Saved sessionID :" + sessionID);
+        return success;
     }
 
     // You need to do the Play Services APK check here too.
@@ -133,13 +165,14 @@ public class MainActivity extends Activity {
     }
 
     public void setLocation(Location location) {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
+    }
+
+    private void populateMapWithFakeData() {
         LatLng[] testChatrooms = new LatLng[3];
         testChatrooms[0] = new LatLng(29.647089f, -82.345898f);
         testChatrooms[1] = new LatLng(29.642409f, -82.345190f);
         testChatrooms[2] = new LatLng(29.645374f, -82.340899f);
-
-        myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
 
         int index = 1;
         for (LatLng pos : testChatrooms){
@@ -161,6 +194,7 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            logout();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -213,7 +247,7 @@ public class MainActivity extends Activity {
     private SharedPreferences getGCMPreferences(Context context) {
         // This sample app persists the registration ID in shared preferences, but
         // how you store the regID in your app is up to you.
-        return getSharedPreferences(LoginActivity.class.getSimpleName(),
+        return getSharedPreferences(MainActivity.class.getSimpleName(),
                 Context.MODE_PRIVATE);
     }
 
@@ -286,6 +320,7 @@ public class MainActivity extends Activity {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
                     regid = gcm.register(SENDER_ID);
+                    Log.i("reg_id",regid);
                     msg = "Device registered, registration ID=" + regid;
 
                     // You should send the registration ID to your server over HTTP,
@@ -310,5 +345,18 @@ public class MainActivity extends Activity {
             }
 
         }.execute(null, null, null);
+
+    }
+    public void logout() {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear();
+        editor.commit();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+
+        // Remove this activity from the Activity stack so the user cannot go back to this
+        finish();
+
     }
 }

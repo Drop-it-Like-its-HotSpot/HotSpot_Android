@@ -2,17 +2,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
+    android:background="#16a085"
     tools:context="com.example.ticknardif.hotspot.AppStartActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="120dip"
+        android:src="@drawable/logo" />
 
     <TextView android:id="@+id/fullscreen_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:keepScreenOn="true"
-        android:textColor="#33b5e5"
+        android:textColor="#fff"
         android:textStyle="bold"
         android:textSize="50sp"
         android:gravity="center"
-        android:text="@string/dummy_content" />
-
+        android:text="HotSpot" />
 </FrameLayout>

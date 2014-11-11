@@ -37,7 +37,40 @@ public class LoginActivity extends Activity {
     private RestAdapter restAdapter;
     private  WebService webService;
 
+    // Create the static login response callback
+    private Callback<LoginResponse> loginResponseCallback =  new Callback<LoginResponse>() {
+    @Override
+    public void success(LoginResponse loginResponse, Response response) {
+        if(loginResponse.success)
+        {
+            Log.d("Login Response",loginResponse.toString());
 
+            // Save the session ID in SharedPreferences
+            Context context = getBaseContext();
+            SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
+
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(getString(R.string.shared_pref_session_id), loginResponse.session_id.toString());
+            editor.apply();
+
+            startMainActivity(loginResponse.session_id);
+        }
+        else
+        {
+            Context context = getApplicationContext();
+            CharSequence text = getString(R.string.login_failure);
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
+    }
+
+        @Override
+        public void failure(RetrofitError error) {
+            Log.e("HTTP Error", error.toString());
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +78,7 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
-
+        // Instantiate our REST API
         restAdapter = new RestAdapter.Builder()
                     .setServer("http://54.172.35.180:8080")
                     .build();
@@ -59,7 +91,7 @@ public class LoginActivity extends Activity {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if(i == EditorInfo.IME_ACTION_DONE) {
                     // It doesn't matter what view we pass into logIn()
-                    logIn(passwordEdit);
+                    login(passwordEdit);
                 }
                 return false;
             }
@@ -85,16 +117,33 @@ public class LoginActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void logIn(View view) {
+    // This is the function called by the Login button
+    public void login(View view) {
         // Can get the email and password stuff from the view
         String email = ((EditText)findViewById(R.id.login_email)).getText().toString();
         String password = ((EditText)findViewById(R.id.login_password)).getText().toString();
 
-        checkPassword(email, password, false);
+        // Calls the API login method
+        login(email, password);
+    }
+
+    // Take the submitted information, save it in user preferences, and try and log the user in
+    private void login(final String email, final String password) {
+
+        // Save the submitted user information in SharedPreferences
+        Context context = getBaseContext();
+        SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.shared_pref_email), email);
+        editor.putString(getString(R.string.shared_pref_password), password);
+        editor.apply();
+
+        // Attempt to login the user
+        webService.login(email,password, loginResponseCallback);
     }
 
     //Start Main Activity with Session Information
-    public void startMain(UUID session)
+    public void startMainActivity(UUID session)
     {
         Intent intent = new Intent(this, MainActivity.class);
         Bundle data = new Bundle();
@@ -128,7 +177,7 @@ public class LoginActivity extends Activity {
                         editor.apply();
                     }
 
-                    startMain(loginResponse.session_id);
+                    startMainActivity(loginResponse.session_id);
                 }
                 else
                 {
@@ -149,7 +198,7 @@ public class LoginActivity extends Activity {
     }
 
 
-    public void goToCreateAccount(View view) {
+    public void startCreateAccountActivity(View view) {
         Log.d("debug", "Changing activities to CreateAccount!");
         Intent intent = new Intent(this, CreateAccountActivity.class);
         startActivity(intent);
