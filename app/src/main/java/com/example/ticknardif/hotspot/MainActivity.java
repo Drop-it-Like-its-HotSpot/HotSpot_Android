@@ -1,6 +1,7 @@
 package com.example.ticknardif.hotspot;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,11 +10,15 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -26,6 +31,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit.Callback;
@@ -33,7 +40,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements ChatroomOverlay.OnFragmentInteractionListener{
 
     //Variables for registering with GCM
     public static final String EXTRA_MESSAGE = "message";
@@ -118,6 +125,27 @@ public class MainActivity extends Activity {
         };
 
         locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
+
+        Fragment overlayFragment = getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment);
+        /*
+        overlayFragment.getView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("Debug", "Hey I'm touching the fragment!!!");
+            }
+        });
+        */
+
+        // Fill in some fakeData to create chatroom_list with
+        String[] myStrings = {"String1", "Nick is the best", "Hey there buddy", "Winner"};
+        List<Chatroom> myChatrooms = new ArrayList<Chatroom>();
+        myChatrooms.add(new Chatroom(1, 1, 69.20, -82.17, "FunChat", "This is the fun chat"));
+
+        // Set up an adapter to fill out the chatroom_list
+        ChatroomListAdapter adapter = new ChatroomListAdapter(this, R.layout.chatroom_list_item, myChatrooms);
+        ListView listView = (ListView) getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment).getView();
+        Log.d("Debug", listView.toString());
+        listView.setAdapter(adapter);
     }
 
     public void setLocation() {
@@ -158,6 +186,12 @@ public class MainActivity extends Activity {
         for (LatLng pos : testChatrooms){
             map.addMarker(new MarkerOptions().position(pos).title("Test Chatroom" + Integer.toString(index++)));
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        Log.d("Debug", "Calling onFragmentInteraction");
+        Log.d("Debug", "URI is :" + uri.toString());
     }
 
     @Override
