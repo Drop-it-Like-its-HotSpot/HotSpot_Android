@@ -3,6 +3,7 @@ package com.example.ticknardif.hotspot;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -163,13 +164,21 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
     }
 
     //Log User in to get session
-    public void login(String email, String password){
+    public void login(final String email, final String password){
         webService.login(email,password, new Callback<LoginResponse>() {
             @Override
             public void success(LoginResponse loginResponse, Response response) {
                 if(loginResponse.success)
                 {
                     Log.d("Login Response",loginResponse.toString());
+
+                    // Save the submitted user information in SharedPreferences
+                    Context context = getBaseContext();
+                    SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(getString(R.string.shared_pref_email), email);
+                    editor.putString(getString(R.string.shared_pref_password), password);
+                    editor.apply();
 
                     startMain(loginResponse.session_id);
                 }
