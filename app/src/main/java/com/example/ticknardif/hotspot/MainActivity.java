@@ -66,6 +66,35 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
     private SharedPreferences sharedPref;
 
+    private Callback<List<ChatroomResponse>> chatroomResponseCallback =  new Callback<List<ChatroomResponse>>() {
+        @Override
+        public void success(List<ChatroomResponse> chatroomList, Response response) {
+            Log.d("Debug", "Successful finding nearby chatrooms");
+
+            // Display the chatrooms we received on the screen
+            ChatroomListAdapter adapter = new ChatroomListAdapter(getBaseContext(), R.layout.chatroom_list_item);
+            ListView listView = (ListView) getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment).getView();
+            listView.setAdapter(adapter);
+
+            for(ChatroomResponse item: chatroomList) {
+                Log.d("Debug", "Item is: " + item.toString());
+
+                Chatroom chatroom = responseToChatroom(item);
+                adapter.add(chatroom);
+                addChatroomToMap(chatroom);
+            }
+        }
+        @Override
+        public void failure(RetrofitError error) {
+            Log.e("Debug", error.toString());
+            Log.d("Debug", "Failure finding nearby chatrooms");
+        }
+
+        private Chatroom responseToChatroom(ChatroomResponse response) {
+            Log.d("Debug" , "Response is: " + response.toString());
+            return new Chatroom(response.chat_id, response.Room_Admin, response.Latitude, response.Longitude, response.Chat_title, response.Chat_Dscrpn);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +123,6 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
         Bundle extras = getIntent().getExtras();
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.main_map)).getMap();
-        populateMapWithFakeData();
 
         Context context = getBaseContext();
         sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
@@ -127,25 +155,10 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
 
         Fragment overlayFragment = getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment);
-        /*
-        overlayFragment.getView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("Debug", "Hey I'm touching the fragment!!!");
-            }
-        });
-        */
 
-        // Fill in some fakeData to create chatroom_list with
-        String[] myStrings = {"String1", "Nick is the best", "Hey there buddy", "Winner"};
-        List<Chatroom> myChatrooms = new ArrayList<Chatroom>();
-        myChatrooms.add(new Chatroom(1, 1, 69.20, -82.17, "FunChat", "This is the fun chat"));
+        Log.d("Debug", "SessionID is: " + sessionID);
+        webService.getChatrooms(sessionID, chatroomResponseCallback);
 
-        // Set up an adapter to fill out the chatroom_list
-        ChatroomListAdapter adapter = new ChatroomListAdapter(this, R.layout.chatroom_list_item, myChatrooms);
-        ListView listView = (ListView) getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment).getView();
-        Log.d("Debug", listView.toString());
-        listView.setAdapter(adapter);
     }
 
     public void setLocation() {
@@ -176,16 +189,10 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
     }
 
-    private void populateMapWithFakeData() {
-        LatLng[] testChatrooms = new LatLng[3];
-        testChatrooms[0] = new LatLng(29.647089f, -82.345898f);
-        testChatrooms[1] = new LatLng(29.642409f, -82.345190f);
-        testChatrooms[2] = new LatLng(29.645374f, -82.340899f);
-
-        int index = 1;
-        for (LatLng pos : testChatrooms){
-            map.addMarker(new MarkerOptions().position(pos).title("Test Chatroom" + Integer.toString(index++)));
-        }
+    private void addChatroomToMap(Chatroom chatroom) {
+        LatLng location = new LatLng(chatroom.getLat(), chatroom.getLng());
+        String title = chatroom.getTitle();
+        map.addMarker(new MarkerOptions().position(location).title(title));
     }
 
     @Override

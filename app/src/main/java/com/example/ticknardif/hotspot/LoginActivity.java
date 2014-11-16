@@ -39,32 +39,32 @@ public class LoginActivity extends Activity {
 
     // Create the static login response callback
     private Callback<LoginResponse> loginResponseCallback =  new Callback<LoginResponse>() {
-    @Override
-    public void success(LoginResponse loginResponse, Response response) {
-        if(loginResponse.success)
-        {
-            Log.d("Login Response",loginResponse.toString());
+        @Override
+        public void success(LoginResponse loginResponse, Response response) {
+            if(loginResponse.success)
+            {
+                Log.d("Login Response",loginResponse.toString());
 
-            // Save the session ID in SharedPreferences
-            Context context = getBaseContext();
-            SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
+                // Save the session ID in SharedPreferences
+                Context context = getBaseContext();
+                SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
 
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString(getString(R.string.shared_pref_session_id), loginResponse.session_id.toString());
-            editor.apply();
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(getString(R.string.shared_pref_session_id), loginResponse.session_id.toString());
+                editor.apply();
 
-            startMainActivity(loginResponse.session_id);
+                startMainActivity(loginResponse.session_id);
+            }
+            else
+            {
+                Context context = getApplicationContext();
+                CharSequence text = getString(R.string.login_failure);
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
         }
-        else
-        {
-            Context context = getApplicationContext();
-            CharSequence text = getString(R.string.login_failure);
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-        }
-    }
 
         @Override
         public void failure(RetrofitError error) {
