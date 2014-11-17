@@ -26,6 +26,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -211,7 +212,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
     private void addChatroomToMap(Chatroom chatroom) {
         LatLng location = new LatLng(chatroom.getLat(), chatroom.getLng());
         String title = chatroom.getTitle();
-        map.addMarker(new MarkerOptions().position(location).title(title));
+        map.addMarker(new MarkerOptions().position(location).title(title).icon(BitmapDescriptorFactory.fromResource(R.drawable.pindrop)));
     }
 
     @Override
