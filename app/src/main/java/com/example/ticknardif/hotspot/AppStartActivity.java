@@ -42,7 +42,15 @@ public class AppStartActivity extends Activity {
         public void success(LoginResponse loginResponse, Response response) {
             if (loginResponse.success) {
                 Log.d("Debug", "AppStart: Logged in with user preferences");
-                startMainActivity(loginResponse.session_id);
+
+                Context context = getBaseContext();
+                SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
+
+                // Put the session ID in the shared preferences
+                sharedPref.edit().putString(getString(R.string.shared_pref_session_id), loginResponse.session_id.toString());
+                sharedPref.edit().apply();
+
+                startMainActivity();
             }
             else {
                 Log.d("Debug", "User preferences were not found or didn't work");
@@ -111,14 +119,9 @@ public class AppStartActivity extends Activity {
     }
 
     //Start Main Activity with Session + Location Information
-    public void startMainActivity(UUID session)
+    public void startMainActivity()
     {
         Intent intent = new Intent(this, MainActivity.class);
-
-        // Put the Session and Location information into the bundle
-        Bundle data = new Bundle();
-        data.putString("session",session.toString());
-        intent.putExtras(data);
 
         startActivity(intent);
 

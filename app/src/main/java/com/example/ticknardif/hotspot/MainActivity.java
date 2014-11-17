@@ -17,9 +17,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -31,7 +30,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -66,21 +64,31 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
     private SharedPreferences sharedPref;
 
+    private ChatroomListAdapter chatroomAdapter;
+    private Fragment chatListFragment;
+    private ListView chatroomListView;
+
     private Callback<List<ChatroomResponse>> chatroomResponseCallback =  new Callback<List<ChatroomResponse>>() {
         @Override
         public void success(List<ChatroomResponse> chatroomList, Response response) {
             Log.d("Debug", "Successful finding nearby chatrooms");
 
             // Display the chatrooms we received on the screen
-            ChatroomListAdapter adapter = new ChatroomListAdapter(getBaseContext(), R.layout.chatroom_list_item);
-            ListView listView = (ListView) getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment).getView();
-            listView.setAdapter(adapter);
+            Fragment overlayFragment = getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment);
+
+            if(overlayFragment == null) return;
+
+            ListView listView = (ListView) overlayFragment.getView();
+
+            if(listView == null) return;
+
+            listView.setAdapter(chatroomAdapter);
 
             for(ChatroomResponse item: chatroomList) {
                 Log.d("Debug", "Item is: " + item.toString());
 
                 Chatroom chatroom = responseToChatroom(item);
-                adapter.add(chatroom);
+                chatroomAdapter.add(chatroom);
                 addChatroomToMap(chatroom);
             }
         }
@@ -106,7 +114,6 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         webService = restAdapter.create(WebService.class);
         context = getApplicationContext();
         Bundle bundle = this.getIntent().getExtras();
-        session = bundle.getString("session");
         if (checkPlayServices()) {
             gcm = GoogleCloudMessaging.getInstance(this);
             regid = getRegistrationId(context);
@@ -123,12 +130,13 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
         Bundle extras = getIntent().getExtras();
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.main_map)).getMap();
+        chatroomAdapter = new ChatroomListAdapter(getBaseContext(), R.layout.chatroom_list_item);
 
         Context context = getBaseContext();
         sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
         String email = sharedPref.getString(getString(R.string.shared_pref_email), "No Email Set");
         String password = sharedPref.getString(getString(R.string.shared_pref_password), "No Password Set");
-        String sessionID = sharedPref.getString(getString(R.string.shared_pref_session_id), "No SessionID Set");
+        session = sharedPref.getString(getString(R.string.shared_pref_session_id), "No SessionID Set");
 
         // If there is a location stored in the preferences, center the map on it
         if(getLocationFromPreferences()) {
@@ -156,9 +164,20 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
         Fragment overlayFragment = getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment);
 
-        Log.d("Debug", "SessionID is: " + sessionID);
-        webService.getChatrooms(sessionID, chatroomResponseCallback);
+        Log.d("Debug", "SessionID is: " + session);
+        webService.getChatrooms(session, chatroomResponseCallback);
 
+        chatListFragment = getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment);
+        chatroomListView = (ListView) chatListFragment.getView();
+        chatroomListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Chatroom chatroom = (Chatroom) adapterView.getItemAtPosition(i);
+
+                Intent intent = new Intent(getBaseContext(), ChatroomActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void setLocation() {
