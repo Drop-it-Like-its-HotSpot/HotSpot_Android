@@ -46,4 +46,8 @@ public interface WebService {
 
     @GET("/api/chatroom/{session_id}")
     void getChatrooms(@Path("session_id") String session_id, Callback<List<ChatroomResponse>> res);
+
+    @FormUrlEncoded
+    @POST("/api/chatroomusers/")
+    void joinChatroom(@Field("room_id") int roomId, @Field("session_id") String sessionId, Callback<JoinChatroomResponse> res);
 }

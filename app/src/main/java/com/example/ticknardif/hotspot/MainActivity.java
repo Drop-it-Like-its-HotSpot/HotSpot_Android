@@ -29,6 +29,8 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,6 +40,7 @@ import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.converter.GsonConverter;
 
 public class MainActivity extends Activity implements ChatroomOverlay.OnFragmentInteractionListener{
 
@@ -105,16 +108,42 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         }
     };
 
+    private Callback<JoinChatroomResponse> joinChatroomResponseCallback =  new Callback<JoinChatroomResponse>() {
+        @Override
+        public void success(JoinChatroomResponse joinChatroomResponse, Response response) {
+            //TODO: Fix this conversion from timestamp -> java.util.Date
+            Log.d("Debug", "Request Data: " + new Gson().toJson(joinChatroomResponse));
+            Log.d("Debug", "JoinedDate is " + joinChatroomResponse.joinedDateTime.toString());
+
+            if (joinChatroomResponse.joinedDateTime != null) {
+                Log.d("Debug", "JoinedDateTime: " + joinChatroomResponse.joinedDateTime.toString());
+            }
+        }
+        @Override
+        public void failure(RetrofitError error) {
+            Log.e("Debug", error.toString());
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Create a converter for JSON timestamps to java.util.Date
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+
         restAdapter = new RestAdapter.Builder()
                 .setServer("http://54.172.35.180:8080")
+                .setConverter(new GsonConverter(gson))
                 .build();
+
         webService = restAdapter.create(WebService.class);
+
         context = getApplicationContext();
         Bundle bundle = this.getIntent().getExtras();
+
+        // GCM Stuff
         if (checkPlayServices()) {
             gcm = GoogleCloudMessaging.getInstance(this);
             regid = getRegistrationId(context);
@@ -133,7 +162,6 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.main_map)).getMap();
         chatroomAdapter = new ChatroomListAdapter(getBaseContext(), R.layout.chatroom_list_item);
 
-        Context context = getBaseContext();
         sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
         String email = sharedPref.getString(getString(R.string.shared_pref_email), "No Email Set");
         String password = sharedPref.getString(getString(R.string.shared_pref_password), "No Password Set");
@@ -175,8 +203,12 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Chatroom chatroom = (Chatroom) adapterView.getItemAtPosition(i);
 
+                webService.joinChatroom(chatroom.chat_id, session, joinChatroomResponseCallback);
+
+                /*
                 Intent intent = new Intent(getBaseContext(), ChatroomActivity.class);
                 startActivity(intent);
+                */
             }
         });
     }
