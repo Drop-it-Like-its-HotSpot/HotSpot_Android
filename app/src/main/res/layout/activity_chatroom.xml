@@ -2,24 +2,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.example.ticknardif.hotspot.ChatroomActivity">
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/chat_message_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+    </ListView>
 
-        <TextView
-            android:text="@string/hello_world"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <EditText
+    <RelativeLayout
         android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="20dip" />
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
 
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent">
+
+            <EditText
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_weight="1"
+                />
+
+            <Button
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Submit">
+            </Button>
+
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

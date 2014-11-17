@@ -4,16 +4,33 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+
 import com.example.ticknardif.hotspot.R;
 
 public class ChatroomActivity extends Activity {
-
+    private MessageListAdapter messageAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom);
+
+        messageAdapter = new MessageListAdapter(getBaseContext(), R.layout.message_list_item);
+        ListView messageListView = (ListView) findViewById(R.id.chat_message_list);
+        messageListView.setAdapter(messageAdapter);
+
+        Message message = new Message("Hi there nick", 1, "Josh");
+        addMessage(message);
+        message = new Message("Yo yo fuckface", 2, "Nick");
+        addMessage(message);
+        message = new Message("...", 1, "Josh");
+        addMessage(message);
+    }
+
+    private void addMessage(Message message) {
+        messageAdapter.add(message);
     }
 
 
