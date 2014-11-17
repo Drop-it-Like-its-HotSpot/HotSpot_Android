@@ -48,7 +48,7 @@ public class AppStartActivity extends Activity {
 
                 // Put the session ID in the shared preferences
                 sharedPref.edit().putString(getString(R.string.shared_pref_session_id), loginResponse.session_id.toString());
-                sharedPref.edit().apply();
+                sharedPref.edit().commit();
 
                 startMainActivity();
             }
