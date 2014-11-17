@@ -331,28 +331,24 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
      * shared preferences.
      */
     private void registerInBackground() {
-        new AsyncTask() {
-
+        new AsyncTask<Void, Void, String>() {
             @Override
-            protected String doInBackground(Object... params) {
+            protected String doInBackground(Void... params) {
                 String msg = "";
                 try {
                     if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
                     regid = gcm.register(SENDER_ID);
-                    Log.i("reg_id",regid);
                     msg = "Device registered, registration ID=" + regid;
 
-                    // You should send the registration ID to your server over HTTP,
-                    // so it can use GCM/HTTP or CCS to send messages to your app.
-                    // The request to your server should be authenticated if your app
-                    // is using accounts.
+                    // You should send the registration ID to your server over HTTP, so it
+                    // can use GCM/HTTP or CCS to send messages to your app.
                     sendRegistrationIdToBackend();
 
-                    // For this demo: we don't need to send it because the device
-                    // will send upstream messages to a server that echo back the
-                    // message using the 'from' address in the message.
+                    // For this demo: we don't need to send it because the device will send
+                    // upstream messages to a server that echo back the message using the
+                    // 'from' address in the message.
 
                     // Persist the regID - no need to register again.
                     storeRegistrationId(context, regid);
@@ -365,8 +361,11 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
                 return msg;
             }
 
+            @Override
+            protected void onPostExecute(String msg) {
+                Log.i("GCM","Registered with GCM!");
+            }
         }.execute(null, null, null);
-
     }
 
     public void logout() {
