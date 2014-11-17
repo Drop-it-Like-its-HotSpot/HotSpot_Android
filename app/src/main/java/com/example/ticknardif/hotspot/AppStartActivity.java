@@ -45,10 +45,11 @@ public class AppStartActivity extends Activity {
 
                 Context context = getBaseContext();
                 SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
 
                 // Put the session ID in the shared preferences
-                sharedPref.edit().putString(getString(R.string.shared_pref_session_id), loginResponse.session_id.toString());
-                sharedPref.edit().commit();
+                editor.putString(getString(R.string.shared_pref_session_id), loginResponse.session_id.toString());
+                editor.commit();
 
                 startMainActivity();
             }
