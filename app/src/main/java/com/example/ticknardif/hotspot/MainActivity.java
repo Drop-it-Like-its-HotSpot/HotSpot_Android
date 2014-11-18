@@ -112,12 +112,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         @Override
         public void success(JoinChatroomResponse joinChatroomResponse, Response response) {
             //TODO: Fix this conversion from timestamp -> java.util.Date
-            Log.d("Debug", "Request Data: " + new Gson().toJson(joinChatroomResponse));
-            Log.d("Debug", "JoinedDate is " + joinChatroomResponse.joinedDateTime.toString());
-
-            if (joinChatroomResponse.joinedDateTime != null) {
-                Log.d("Debug", "JoinedDateTime: " + joinChatroomResponse.joinedDateTime.toString());
-            }
+            Log.d("Debug", "Request Data: " + joinChatroomResponse.toString());
         }
         @Override
         public void failure(RetrofitError error) {
@@ -205,10 +200,8 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
                 webService.joinChatroom(chatroom.chat_id, session, joinChatroomResponseCallback);
 
-                /*
                 Intent intent = new Intent(getBaseContext(), ChatroomActivity.class);
                 startActivity(intent);
-                */
             }
         });
     }
