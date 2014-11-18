@@ -47,6 +47,12 @@ public interface WebService {
     @GET("/api/chatroom/{session_id}")
     void getChatrooms(@Path("session_id") String session_id, Callback<List<ChatroomResponse>> res);
 
+    @GET("/api/messages/room_id/{room_id}/{session_id}")
+    void getMessages(@Path("room_id") int room_id,@Path("session_id") String session_id, Callback<List<Message>> res);
+
+    @GET("/api/messages/room_id/{room_id}/{timestamp}/{session_id}")
+    void getMessages(@Path("room_id") int room_id,@Path("timestamp") String timestamp,@Path("session_id") String session_id, Callback<List<Message>> res);
+
     @FormUrlEncoded
     @POST("/api/chatroomusers/")
     void joinChatroom(@Field("room_id") int roomId, @Field("session_id") String sessionId, Callback<JoinChatroomResponse> res);
