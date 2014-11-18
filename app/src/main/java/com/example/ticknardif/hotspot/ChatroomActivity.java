@@ -7,26 +7,37 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.example.ticknardif.hotspot.R;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import retrofit.RestAdapter;
+import retrofit.converter.GsonConverter;
 
 public class ChatroomActivity extends Activity {
     private MessageListAdapter messageAdapter;
+    private RestAdapter restAdapter;
+    private  WebService webService;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom);
+        // Create a converter for JSON timestamps to java.util.Date
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+
+        restAdapter = new RestAdapter.Builder()
+                .setServer("http://54.172.35.180:8080")
+                .setConverter(new GsonConverter(gson))
+                .build();
+
+        webService = restAdapter.create(WebService.class);
 
         messageAdapter = new MessageListAdapter(getBaseContext(), R.layout.message_list_item);
         ListView messageListView = (ListView) findViewById(R.id.chat_message_list);
         messageListView.setAdapter(messageAdapter);
 
-        Message message = new Message("Hi there nick", 1, "Josh");
-        addMessage(message);
-        message = new Message("Yo yo fuckface", 2, "Nick");
-        addMessage(message);
-        message = new Message("...", 1, "Josh");
-        addMessage(message);
+        //addMessage(message);
     }
 
     private void addMessage(Message message) {

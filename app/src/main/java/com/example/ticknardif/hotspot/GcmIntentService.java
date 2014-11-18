@@ -60,7 +60,8 @@ public class GcmIntentService extends IntentService {
                 }
                 Log.i("GCM Done: ", "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
-                sendNotification("Received: " + extras.toString());
+                //Extract Chatroom Number: extras.getInt("Room_id")
+                sendNotification("Received New Message!!");
                 Log.i("GCM Received: ", "Received: " + extras.toString());
             }
         }

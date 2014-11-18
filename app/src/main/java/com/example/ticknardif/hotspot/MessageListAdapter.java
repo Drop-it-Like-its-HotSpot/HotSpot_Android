@@ -37,14 +37,14 @@ public class MessageListAdapter extends ArrayAdapter<Message> {
 
             // Set the message content in the TextView
             if(contentTV != null) {
-                contentTV.setText(message.getContent());
+                contentTV.setText(message.getMessage());
             }
 
             // Set the message sender name in the TextView
             TextView sender_nameTV = (TextView) view.findViewById(R.id.message_sender_name);
 
             if(sender_nameTV != null) {
-                sender_nameTV.setText(message.getSenderName());
+                sender_nameTV.setText(message.getMessage());
             }
         }
 

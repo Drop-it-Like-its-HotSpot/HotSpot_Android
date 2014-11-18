@@ -38,20 +38,22 @@ public interface WebService {
     @POST("/api/gcm")
     void regGCM(@Field("session_id") String session_id,@Field("reg_id") String reg_id, Callback<GCMResponse> res);
 
-    @GET("/api/chatroom/{chatroom_id}/{session_id}")
-    void getUsersInChatroom(@Path("chatroom_id") int chatroom_id, @Path("session_id") String session_id, Callback<ChatroomUserResponse> res);
-
-    @GET("/api/chatroom/user_id/{session_id}")
-    void getUsersInChatroom(@Path("session_id") String session_id, Callback<ChatroomUserResponse> res);
+    @GET("/api/chatroomusers/user_id/{session_id}")
+    void getJoinedChatroom(@Path("session_id") String session_id, Callback<List<ChatroomUserResponse>> res);
 
     @GET("/api/chatroom/{session_id}")
     void getChatrooms(@Path("session_id") String session_id, Callback<List<ChatroomResponse>> res);
+
+
+    @FormUrlEncoded
+    @POST("/api/messages")
+    void sendMessage(@Field("session_id") String session_id,@Field("room_id") String room_id, @Field("message") String message, Callback<MessageResponse> res);
 
     @GET("/api/messages/room_id/{room_id}/{session_id}")
     void getMessages(@Path("room_id") int room_id,@Path("session_id") String session_id, Callback<List<Message>> res);
 
     @GET("/api/messages/room_id/{room_id}/{timestamp}/{session_id}")
-    void getMessages(@Path("room_id") int room_id,@Path("timestamp") String timestamp,@Path("session_id") String session_id, Callback<List<Message>> res);
+    void getLatestMessages(@Path("room_id") int room_id,@Path("timestamp") String timestamp,@Path("session_id") String session_id, Callback<List<Message>> res);
 
     @FormUrlEncoded
     @POST("/api/chatroomusers/")
