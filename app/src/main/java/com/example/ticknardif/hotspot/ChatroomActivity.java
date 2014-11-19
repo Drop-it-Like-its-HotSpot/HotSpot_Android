@@ -1,30 +1,72 @@
 package com.example.ticknardif.hotspot;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.ticknardif.hotspot.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 import java.util.Date;
+import java.util.List;
 
 public class ChatroomActivity extends Activity {
     private MessageListAdapter messageAdapter;
     private RestAdapter restAdapter;
     private  WebService webService;
 
+    private Callback<List<Message>> messageResponseCallback =  new Callback<List<Message>>() {
+        @Override
+        public void success(List<Message> chatroomList, Response response) {
+            Log.d("Debug", "Loaded " + chatroomList.size() + " messages!");
+            for(Message message : chatroomList) {
+                messageAdapter.add(message);
+            }
+        }
+        @Override
+        public void failure(RetrofitError error) {
+            Log.e("Debug", error.toString());
+        }
+    };
+
+    private Callback<MessageResponse> sendMessageCallback =  new Callback<MessageResponse>() {
+        @Override
+        public void success(MessageResponse chatroomList, Response response) {
+            Log.d("Debug", "Message was sent successfully");
+        }
+        @Override
+        public void failure(RetrofitError error) {
+            Log.e("Debug", error.toString());
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom);
+
+        Bundle bundle = getIntent().getExtras();
+        final int roomId = bundle.getInt("roomId");
+
+        SharedPreferences sharedPref = getBaseContext().getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
+        final String session = sharedPref.getString(getString(R.string.shared_pref_session_id), "No SessionID Set");
+
         // Create a converter for JSON timestamps to java.util.Date
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
 
@@ -39,12 +81,17 @@ public class ChatroomActivity extends Activity {
         ListView messageListView = (ListView) findViewById(R.id.chat_message_list);
         messageListView.setAdapter(messageAdapter);
 
-        Message message = new Message(1, 1, 1, new Date(), "yo yo yo");
-        addMessage(message);
-        message = new Message(1, 2, 1, new Date(), "Hey man");
-        addMessage(message);
-        message = new Message(1, 1, 1, new Date(), "Die");
-        addMessage(message);
+        webService.getMessages(roomId, session, messageResponseCallback);
+
+        Button sendButton = (Button) findViewById(R.id.send_button);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText et = (EditText) findViewById(R.id.message_edit_text);
+                String message = et.getText().toString();
+                webService.sendMessage(session, roomId, message, sendMessageCallback);
+            }
+        });
     }
 
     private void addMessage(Message message) {

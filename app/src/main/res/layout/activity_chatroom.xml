@@ -21,12 +21,14 @@
             android:layout_width="fill_parent">
 
             <EditText
+                android:id="@+id/message_edit_text"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
                 android:layout_weight="1"
                 />
 
             <Button
+                android:id="@+id/send_button"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="Submit">
