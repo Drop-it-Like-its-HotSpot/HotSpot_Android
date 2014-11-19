@@ -13,6 +13,8 @@ import com.google.gson.GsonBuilder;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
 
+import java.util.Date;
+
 public class ChatroomActivity extends Activity {
     private MessageListAdapter messageAdapter;
     private RestAdapter restAdapter;
@@ -37,7 +39,12 @@ public class ChatroomActivity extends Activity {
         ListView messageListView = (ListView) findViewById(R.id.chat_message_list);
         messageListView.setAdapter(messageAdapter);
 
-        //addMessage(message);
+        Message message = new Message(1, 1, 1, new Date(), "yo yo yo");
+        addMessage(message);
+        message = new Message(1, 2, 1, new Date(), "Hey man");
+        addMessage(message);
+        message = new Message(1, 1, 1, new Date(), "Die");
+        addMessage(message);
     }
 
     private void addMessage(Message message) {
