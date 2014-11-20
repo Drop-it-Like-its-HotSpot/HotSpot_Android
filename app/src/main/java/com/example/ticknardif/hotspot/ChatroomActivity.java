@@ -23,6 +23,7 @@ import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class ChatroomActivity extends Activity {
@@ -44,9 +45,10 @@ public class ChatroomActivity extends Activity {
         }
     };
 
-    private Callback<MessageResponse> sendMessageCallback =  new Callback<MessageResponse>() {
+    private Callback<Message> sendMessageCallback =  new Callback<Message>() {
         @Override
-        public void success(MessageResponse chatroomList, Response response) {
+        public void success(Message chatroomList, Response response) {
+            messageAdapter.add(chatroomList);
             Log.d("Debug", "Message was sent successfully");
         }
         @Override

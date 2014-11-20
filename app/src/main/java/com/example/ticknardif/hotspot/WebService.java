@@ -47,7 +47,7 @@ public interface WebService {
 
     @FormUrlEncoded
     @POST("/api/messages")
-    void sendMessage(@Field("session_id") String session_id,@Field("room_id") int room_id, @Field("message") String message, Callback<MessageResponse> res);
+    void sendMessage(@Field("session_id") String session_id,@Field("room_id") int room_id, @Field("message") String message, Callback<Message> res);
 
     @GET("/api/messages/room_id/{room_id}/{session_id}")
     void getMessages(@Path("room_id") int room_id,@Path("session_id") String session_id, Callback<List<Message>> res);
@@ -58,4 +58,5 @@ public interface WebService {
     @FormUrlEncoded
     @POST("/api/chatroomusers/")
     void joinChatroom(@Field("room_id") int roomId, @Field("session_id") String sessionId, Callback<JoinChatroomResponse> res);
+
 }

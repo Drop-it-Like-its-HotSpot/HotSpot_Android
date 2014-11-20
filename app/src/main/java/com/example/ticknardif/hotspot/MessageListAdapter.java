@@ -44,7 +44,8 @@ public class MessageListAdapter extends ArrayAdapter<Message> {
             TextView sender_nameTV = (TextView) view.findViewById(R.id.message_sender_name);
 
             if(sender_nameTV != null) {
-                sender_nameTV.setText(Integer.toString(message.getUser_id()));
+                //Need Server to send User NickName
+                sender_nameTV.setText("Bob");
             }
         }
 
