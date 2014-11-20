@@ -39,7 +39,7 @@ public interface WebService {
     void regGCM(@Field("session_id") String session_id,@Field("reg_id") String reg_id, Callback<GCMResponse> res);
 
     @GET("/api/chatroomusers/user_id/{session_id}")
-    void getJoinedChatroom(@Path("session_id") String session_id, Callback<List<ChatroomUserResponse>> res);
+    void getJoinedChatrooms(@Path("session_id") String session_id, Callback<List<ChatroomUserResponse>> res);
 
     @GET("/api/chatroom/{session_id}")
     void getChatrooms(@Path("session_id") String session_id, Callback<List<ChatroomResponse>> res);
@@ -47,7 +47,7 @@ public interface WebService {
 
     @FormUrlEncoded
     @POST("/api/messages")
-    void sendMessage(@Field("session_id") String session_id,@Field("room_id") String room_id, @Field("message") String message, Callback<MessageResponse> res);
+    void sendMessage(@Field("session_id") String session_id,@Field("room_id") int room_id, @Field("message") String message, Callback<MessageResponse> res);
 
     @GET("/api/messages/room_id/{room_id}/{session_id}")
     void getMessages(@Path("room_id") int room_id,@Path("session_id") String session_id, Callback<List<Message>> res);

@@ -72,21 +72,35 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
     private Fragment chatListFragment;
     private ListView chatroomListView;
 
+    private Callback<List<ChatroomUserResponse>> getJoinedChatroomCallback =  new Callback<List<ChatroomUserResponse>>() {
+        @Override
+        public void success(List<ChatroomUserResponse> chatroomList, Response response) {
+            Log.d("Debug", "Successful finding joined chatrooms");
+
+            for(ChatroomUserResponse item: chatroomList) {
+                Log.d("Debug", "Item is: " + item.toString());
+
+                Chatroom chatroom = responseToChatroom(item);
+                chatroomAdapter.add(chatroom);
+                addChatroomToMap(chatroom);
+            }
+        }
+        @Override
+        public void failure(RetrofitError error) {
+            Log.e("Debug", error.toString());
+            Log.d("Debug", "Failure finding nearby chatrooms");
+        }
+
+        private Chatroom responseToChatroom(ChatroomUserResponse response) {
+            Log.d("Debug" , "Response is: " + response.toString());
+            return new Chatroom(response.chat_id, response.Room_Admin, response.latitude, response.longitude, response.Chat_title, response.Chat_Dscrpn);
+        }
+    };
+
     private Callback<List<ChatroomResponse>> chatroomResponseCallback =  new Callback<List<ChatroomResponse>>() {
         @Override
         public void success(List<ChatroomResponse> chatroomList, Response response) {
             Log.d("Debug", "Successful finding nearby chatrooms");
-
-            // Display the chatrooms we received on the screen
-            Fragment overlayFragment = getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment);
-
-            if(overlayFragment == null) return;
-
-            ListView listView = (ListView) overlayFragment.getView();
-
-            if(listView == null) return;
-
-            listView.setAdapter(chatroomAdapter);
 
             for(ChatroomResponse item: chatroomList) {
                 Log.d("Debug", "Item is: " + item.toString());
@@ -157,6 +171,11 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.main_map)).getMap();
         chatroomAdapter = new ChatroomListAdapter(getBaseContext(), R.layout.chatroom_list_item);
 
+        // Display the chatrooms we received on the screen
+        Fragment overlayFragment = getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment);
+        ListView listView = (ListView) overlayFragment.getView();
+        listView.setAdapter(chatroomAdapter);
+
         sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
         String email = sharedPref.getString(getString(R.string.shared_pref_email), "No Email Set");
         String password = sharedPref.getString(getString(R.string.shared_pref_password), "No Password Set");
@@ -186,10 +205,9 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
         locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
 
-        Fragment overlayFragment = getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment);
-
         Log.d("Debug", "SessionID is: " + session);
         webService.getChatrooms(session, chatroomResponseCallback);
+        webService.getJoinedChatrooms(session, getJoinedChatroomCallback);
 
         chatListFragment = getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment);
         chatroomListView = (ListView) chatListFragment.getView();
@@ -201,6 +219,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
                 webService.joinChatroom(chatroom.chat_id, session, joinChatroomResponseCallback);
 
                 Intent intent = new Intent(getBaseContext(), ChatroomActivity.class);
+                intent.putExtra("roomId", chatroom.chat_id);
                 startActivity(intent);
             }
         });
