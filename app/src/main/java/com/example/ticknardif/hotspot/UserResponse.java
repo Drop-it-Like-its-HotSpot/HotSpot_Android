@@ -27,4 +27,10 @@ public class UserResponse {
         return "User ID: " + User_id + " Display Name: " + DisplayName + " Email ID: " + Email_id +
         " Radius: " + radius + " Latitude: " + latitude + " Longitude: " + longitude;
     }
+
+
+    public String getDisplayName() {
+        return DisplayName;
+    }
+
 }

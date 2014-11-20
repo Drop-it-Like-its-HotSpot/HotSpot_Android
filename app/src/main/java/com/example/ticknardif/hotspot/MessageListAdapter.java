@@ -45,7 +45,7 @@ public class MessageListAdapter extends ArrayAdapter<Message> {
 
             if(sender_nameTV != null) {
                 //Need Server to send User NickName
-                sender_nameTV.setText("Bob");
+                sender_nameTV.setText(message.getDisplayName());
             }
         }
 

@@ -59,4 +59,8 @@ public interface WebService {
     @POST("/api/chatroomusers/")
     void joinChatroom(@Field("room_id") int roomId, @Field("session_id") String sessionId, Callback<JoinChatroomResponse> res);
 
+    @GET("/api/users/{session_id}")
+    void getUser(@Path("session_id") String session_id, Callback<UserResponse> res);
+
+
 }

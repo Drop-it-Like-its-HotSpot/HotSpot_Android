@@ -30,6 +30,7 @@ public class ChatroomActivity extends Activity {
     private MessageListAdapter messageAdapter;
     private RestAdapter restAdapter;
     private  WebService webService;
+    private String name;
 
     private Callback<List<Message>> messageResponseCallback =  new Callback<List<Message>>() {
         @Override
@@ -45,9 +46,22 @@ public class ChatroomActivity extends Activity {
         }
     };
 
+    private Callback<UserResponse> userResponseCallback =  new Callback<UserResponse>() {
+        @Override
+        public void success(UserResponse user, Response response) {
+            Log.d("Debug User", user.toString());
+            name = user.getDisplayName();
+        }
+        @Override
+        public void failure(RetrofitError error) {
+            Log.e("Debug", error.toString());
+        }
+    };
+
     private Callback<Message> sendMessageCallback =  new Callback<Message>() {
         @Override
         public void success(Message chatroomList, Response response) {
+            chatroomList.setDisplayName(name);
             messageAdapter.add(chatroomList);
             Log.d("Debug", "Message was sent successfully");
         }
@@ -78,6 +92,8 @@ public class ChatroomActivity extends Activity {
                 .build();
 
         webService = restAdapter.create(WebService.class);
+
+        webService.getUser(session,userResponseCallback );
 
         messageAdapter = new MessageListAdapter(getBaseContext(), R.layout.message_list_item);
         ListView messageListView = (ListView) findViewById(R.id.chat_message_list);

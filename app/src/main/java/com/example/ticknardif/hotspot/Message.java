@@ -6,29 +6,27 @@ public class Message {
 
 
     private int m_id;
-
+    private String DisplayName;
     private int Room_id;
     private int User_id;
     private Date TimeStamp;
-
     private String Message;
-
-
-
     private boolean success;
 
-    public Message(int m_id, int room_id, int user_id, Date timeStamp, String message, boolean success) {
+    public Message(String displayName, int m_id, int room_id, int user_id, Date timeStamp, String message, boolean success) {
         this.m_id = m_id;
         Room_id = room_id;
         User_id = user_id;
         TimeStamp = timeStamp;
         Message = message;
         this.success = success;
+        this.DisplayName = displayName;
     }
 
     @Override
     public String toString() {
         return "Message{" +
+                "Name: " + DisplayName +
                 "m_id=" + m_id +
                 ", Room_id=" + Room_id +
                 ", User_id=" + User_id +
@@ -58,4 +56,10 @@ public class Message {
         return Message;
     }
     public boolean isSuccess() { return success;}
+    public String getDisplayName() {
+        return DisplayName;
+    }
+    public void setDisplayName(String displayName) {
+        DisplayName = displayName;
+    }
 }
