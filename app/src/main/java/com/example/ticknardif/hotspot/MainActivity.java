@@ -64,13 +64,10 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
     private GoogleMap map;
     private LatLng myLatLng;
 
+    private SharedPreferences sharedPref;
     private String session;
 
-    private SharedPreferences sharedPref;
-
     private ChatroomListAdapter chatroomAdapter;
-    private Fragment chatListFragment;
-    private ListView chatroomListView;
 
     private Callback<List<ChatroomUserResponse>> getJoinedChatroomCallback =  new Callback<List<ChatroomUserResponse>>() {
         @Override
@@ -125,12 +122,41 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
     private Callback<JoinChatroomResponse> joinChatroomResponseCallback =  new Callback<JoinChatroomResponse>() {
         @Override
         public void success(JoinChatroomResponse joinChatroomResponse, Response response) {
-            //TODO: Fix this conversion from timestamp -> java.util.Date
             Log.d("Debug", "Request Data: " + joinChatroomResponse.toString());
         }
         @Override
         public void failure(RetrofitError error) {
             Log.e("Debug", error.toString());
+        }
+    };
+
+    private Callback<UpdateLocationResponse> updateLocationCallback = new Callback<UpdateLocationResponse>() {
+        @Override
+        public void success(UpdateLocationResponse updateLocationResponse, Response response) {
+            if(updateLocationResponse.success) {
+                Log.d("Debug", "Location was updated on the server successfully!");
+            }
+            else {
+                Log.d("Debug", "Location update failed on the server.");
+            }
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            Log.e("Debug", error.toString());
+        }
+    };
+
+    AdapterView.OnItemClickListener chatroomClickListener = new AdapterView.OnItemClickListener(){
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Chatroom chatroom = (Chatroom) adapterView.getItemAtPosition(i);
+
+            webService.joinChatroom(chatroom.chat_id, session, joinChatroomResponseCallback);
+
+            Intent intent = new Intent(getBaseContext(), ChatroomActivity.class);
+            intent.putExtra("roomId", chatroom.chat_id);
+            startActivity(intent);
         }
     };
 
@@ -171,14 +197,18 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.main_map)).getMap();
         chatroomAdapter = new ChatroomListAdapter(getBaseContext(), R.layout.chatroom_list_item);
 
-        // Display the chatrooms we received on the screen
+        // Create the chatroom overlay fragment
         Fragment overlayFragment = getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment);
+
+        // Connect our adapter with the overlay ListView
         ListView listView = (ListView) overlayFragment.getView();
         listView.setAdapter(chatroomAdapter);
 
+        // Set the chatroom onClickItemListener
+        listView.setOnItemClickListener(chatroomClickListener);
+
+        // Get our shared Preferences
         sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
-        String email = sharedPref.getString(getString(R.string.shared_pref_email), "No Email Set");
-        String password = sharedPref.getString(getString(R.string.shared_pref_password), "No Password Set");
         session = sharedPref.getString(getString(R.string.shared_pref_session_id), "No SessionID Set");
 
         // If there is a location stored in the preferences, center the map on it
@@ -186,12 +216,18 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
            setLocation();
         }
 
+        // Establish our location listener
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
+                // Set Location on the Google Map
                 setLocation();
 
+                // Update our location in the DB
+                webService.updateLocation(location.getLatitude(), location.getLongitude(), session, updateLocationCallback);
+
+                // Save the location in our SharedPreferences
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putLong("Latitude", Double.doubleToRawLongBits(location.getLatitude()));
                 editor.putLong("Longitude", Double.doubleToRawLongBits(location.getLongitude()));
@@ -203,26 +239,12 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
             public void onProviderDisabled(String provider) {}
         };
 
+        // Ask for a location update in Activity onCreate
         locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
 
         Log.d("Debug", "SessionID is: " + session);
         webService.getChatrooms(session, chatroomResponseCallback);
         webService.getJoinedChatrooms(session, getJoinedChatroomCallback);
-
-        chatListFragment = getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment);
-        chatroomListView = (ListView) chatListFragment.getView();
-        chatroomListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Chatroom chatroom = (Chatroom) adapterView.getItemAtPosition(i);
-
-                webService.joinChatroom(chatroom.chat_id, session, joinChatroomResponseCallback);
-
-                Intent intent = new Intent(getBaseContext(), ChatroomActivity.class);
-                intent.putExtra("roomId", chatroom.chat_id);
-                startActivity(intent);
-            }
-        });
     }
 
     public void setLocation() {
@@ -445,3 +467,4 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         finish();
     }
 }
+

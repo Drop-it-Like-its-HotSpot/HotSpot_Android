@@ -112,55 +112,34 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
             errorOccurred = true;
         }
 
-        // If the email already exists on the server, do nothing
-        /*if(emailExistsInDatabase(email)) {
-            addErrorToList(getString(R.string.create_account_email_exists_in_db));
-            errorOccurred = true;
-        }*/
-
         // Don't try to create the account if an error occurred
         if (errorOccurred) return;
 
-        // If all the conditions above are correct, try and make the account in the DB
-        boolean creationSuccessful = createAccountInDatabase(email, password, username);
+       //TODO:Use actual location for Longitude and Latitude
 
-        // If the account was created successfully, go to the Main activity
-        if(creationSuccessful) {
-           //TODO:Use actual location for Longitude and Latitude
-
-            //Create a user using Web Server and RetroFit
-            webService.createUser(email, password, username, 5.0 , 100.0 , 200.0, new Callback<UserResponse>() {
-                @Override
-                public void success(UserResponse user, Response response) {
-                    if(user.success)
-                    {
-                        Log.d("User Created",user.toString());
-                        login(email,password);
-                    }
-                    else
-                    {
-                        Log.e("User", "User not created!! Please enter different Email ID");
-                        addErrorToList(getString(R.string.create_account_email_invalid));
-                        return;
-                    }
+        //Create a user using Web Server and RetroFit
+        webService.createUser(email, password, username, 5.0 , 29.0 , -82.2, new Callback<UserResponse>() {
+            @Override
+            public void success(UserResponse user, Response response) {
+                if(user.success)
+                {
+                    Log.d("User Created",user.toString());
+                    login(email,password);
                 }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.e("HTTP Error", error.toString());
+                else
+                {
+                    Log.e("User", "User not created!! Please enter different Email ID");
+                    Log.e("Debug", response.toString());
+                    addErrorToList(getString(R.string.create_account_email_invalid));
+                    return;
                 }
-            });
-        }
+            }
 
-        // If the account was not created, alert the user with a toast that it failed
-        else {
-            Context context = getApplicationContext();
-            CharSequence text = getString(R.string.create_account_creation_server_failure);
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
-        }
+            @Override
+            public void failure(RetrofitError error) {
+                                                   Log.e("HTTP Error", error.toString());
+                                                                                                                        }
+        });
     }
 
     //Log User in to get session
@@ -213,11 +192,5 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
     // Add the string parameter to the error list
     private void addErrorToList(String message) {
         adapter.add(message);
-    }
-
-    // Create the account on the server. Returns true if creation is successful
-    private boolean createAccountInDatabase(String email, String password, String username) {
-        //TODO: Contact the server to create the account
-        return true;
     }
 }

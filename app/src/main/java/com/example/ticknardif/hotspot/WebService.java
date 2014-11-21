@@ -62,5 +62,7 @@ public interface WebService {
     @GET("/api/users/{session_id}")
     void getUser(@Path("session_id") String session_id, Callback<UserResponse> res);
 
-
+    @FormUrlEncoded
+    @POST("/api/updatelocation")
+    void updateLocation(@Field("latitude") double latitude, @Field("longitude") double longitude, @Field("session_id") String session_id, Callback<UpdateLocationResponse> res);
 }
