@@ -62,5 +62,9 @@ public interface WebService {
     @GET("/api/users/{session_id}")
     void getUser(@Path("session_id") String session_id, Callback<UserResponse> res);
 
+    @FormUrlEncoded
+    @POST("/api/logout/")
+    void logout(@Field("email_id") String email_id, Callback<LogoutResponse> res);
+
 
 }

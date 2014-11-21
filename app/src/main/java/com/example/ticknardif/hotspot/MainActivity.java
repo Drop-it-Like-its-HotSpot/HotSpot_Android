@@ -65,6 +65,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
     private LatLng myLatLng;
 
     private String session;
+    private String email;
 
     private SharedPreferences sharedPref;
 
@@ -134,6 +135,18 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         }
     };
 
+    private Callback<LogoutResponse> logoutAPI = new Callback<LogoutResponse>(){
+
+        @Override
+        public void success(LogoutResponse logoutResponse, Response response) {
+            Log.d("Debug Server Logout: ", logoutResponse.toString());
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            Log.e("Debug", error.toString());
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,7 +190,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         listView.setAdapter(chatroomAdapter);
 
         sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
-        String email = sharedPref.getString(getString(R.string.shared_pref_email), "No Email Set");
+        email = sharedPref.getString(getString(R.string.shared_pref_email), "No Email Set");
         String password = sharedPref.getString(getString(R.string.shared_pref_password), "No Password Set");
         session = sharedPref.getString(getString(R.string.shared_pref_session_id), "No SessionID Set");
 
@@ -434,9 +447,17 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
     }
 
     public void logout() {
+
+        webService.logout(email, logoutAPI);
+        final SharedPreferences prefs = getGCMPreferences(context);
+
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.clear();
         editor.commit();
+
+        SharedPreferences.Editor gcmEditor = prefs.edit();
+        gcmEditor.clear();
+        gcmEditor.commit();
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
