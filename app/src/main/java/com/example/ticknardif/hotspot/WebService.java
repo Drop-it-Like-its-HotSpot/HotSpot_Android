@@ -67,4 +67,8 @@ public interface WebService {
     void logout(@Field("email_id") String email_id, Callback<LogoutResponse> res);
 
 
+    @FormUrlEncoded
+    @POST("/api/updatelocation")
+    void updateLocation(@Field("latitude") double latitude, @Field("longitude") double longitude, @Field("session_id") String session_id, Callback<UpdateLocationResponse> res);
+
 }
