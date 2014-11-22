@@ -1,9 +1,22 @@
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="#fff"
-    android:id="@+id/chatroom_list"
-    tools:context="com.example.ticknardif.hotspot.ChatroomOverlay">
-</ListView>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dip"
+    android:minHeight="200dip"
+    android:maxHeight="200dip">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        android:layout_height="match_parent">
+
+        <ListView
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="#fff"
+            android:id="@+id/chatroom_list"
+            tools:context="com.example.ticknardif.hotspot.ChatroomOverlay">
+        </ListView>
+    </ScrollView>
+</LinearLayout>

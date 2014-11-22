@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 
 import com.example.ticknardif.hotspot.RESTresponses.ChatroomResponse;
 import com.example.ticknardif.hotspot.RESTresponses.ChatroomUserResponse;
@@ -227,7 +228,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         Fragment overlayFragment = getFragmentManager().findFragmentById(R.id.chatroom_overlay_fragment);
 
         // Connect our adapter with the overlay ListView
-        ListView listView = (ListView) overlayFragment.getView();
+        ListView listView = (ListView) findViewById(R.id.chatroom_list);
         listView.setAdapter(chatroomAdapter);
 
         // Set the chatroom onClickItemListener
