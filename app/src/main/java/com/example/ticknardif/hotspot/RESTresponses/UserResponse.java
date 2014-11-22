@@ -1,16 +1,16 @@
-package com.example.ticknardif.hotspot;
+package com.example.ticknardif.hotspot.RESTresponses;
 
 /**
  * Created by Vatsal on 11/2/2014.
  */
 public class UserResponse {
-    int User_id;
-    String DisplayName;
-    String Email_id;
-    double radius;
-    double latitude;
-    double longitude;
-    boolean success;
+    public int User_id;
+    public String DisplayName;
+    public String Email_id;
+    public double radius;
+    public double latitude;
+    public double longitude;
+    public boolean success;
 
     public UserResponse(int userId, String displayName, String emailId, double radius, double latitude, double longitude, boolean success){
         this.User_id = userId;
@@ -27,7 +27,6 @@ public class UserResponse {
         return "User ID: " + User_id + " Display Name: " + DisplayName + " Email ID: " + Email_id +
         " Radius: " + radius + " Latitude: " + latitude + " Longitude: " + longitude;
     }
-
 
     public String getDisplayName() {
         return DisplayName;

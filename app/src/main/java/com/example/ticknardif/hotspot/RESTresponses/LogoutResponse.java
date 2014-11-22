@@ -1,13 +1,12 @@
-package com.example.ticknardif.hotspot;
+package com.example.ticknardif.hotspot.RESTresponses;
 
 /**
  * Created by Vatsal on 11/21/2014.
  */
 public class LogoutResponse {
 
-    private String message;
-    private boolean success;
-
+    public String message;
+    public boolean success;
 
     public LogoutResponse(String message) {
         this.message = message;
@@ -20,8 +19,4 @@ public class LogoutResponse {
                 ", success=" + success +
                 '}';
     }
-
-
-
-
 }

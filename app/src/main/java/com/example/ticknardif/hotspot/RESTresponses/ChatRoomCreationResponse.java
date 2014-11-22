@@ -1,15 +1,15 @@
-package com.example.ticknardif.hotspot;
+package com.example.ticknardif.hotspot.RESTresponses;
 
 /**
  * Created by Vatsal on 11/8/2014.
  */
 public class ChatRoomCreationResponse {
-    int Room_Admin;
-    int Latitude;
-    int Longitude;
-    int chat_id;
-    String Chat_title;
-    String Chat_Dscrpn;
+    public int Room_Admin;
+    public int Latitude;
+    public int Longitude;
+    public int chat_id;
+    public String Chat_title;
+    public String Chat_Dscrpn;
 
     public ChatRoomCreationResponse(int room_Admin, int latitude, int longitude, int chat_id, String chat_title, String chat_Dscrpn) {
         Room_Admin = room_Admin;

@@ -1,15 +1,14 @@
-package com.example.ticknardif.hotspot;
+package com.example.ticknardif.hotspot.RESTresponses;
+
+import android.util.Log;
 
 import java.sql.Date;
 import java.util.UUID;
 
-/**
- * Created by Vatsal on 11/2/2014.
- */
 public class LoginResponse {
-    UUID session_id;
-    int user_id;
-    boolean success;
+    public UUID session_id;
+    public int user_id;
+    public boolean success;
     public LoginResponse(String session_id, boolean success, int user_id)
     {
         this.session_id = UUID.fromString(session_id);

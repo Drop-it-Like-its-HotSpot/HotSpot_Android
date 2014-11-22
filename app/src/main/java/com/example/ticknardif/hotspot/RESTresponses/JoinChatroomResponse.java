@@ -1,11 +1,11 @@
-package com.example.ticknardif.hotspot;
+package com.example.ticknardif.hotspot.RESTresponses;
 
 import java.util.Date;
 
 public class JoinChatroomResponse {
-    int Room_id;
-    int User_id;
-    Date joined;
+    public int Room_id;
+    public int User_id;
+    public Date joined;
 
     public JoinChatroomResponse(int userId, int chatId, Date joined) {
         this.Room_id = chatId;

@@ -1,23 +1,25 @@
-package com.example.ticknardif.hotspot;
+package com.example.ticknardif.hotspot.RESTresponses;
 
 /**
  * Created by Vatsal on 11/8/2014.
  */
 public class ChatroomResponse {
-    int chat_id;
-    int Room_Admin;
-    double Longitude;
-    double Latitude;
-    String Chat_title;
-    String Chat_Dscrpn;
+    public int chat_id;
+    public int Room_Admin;
+    public double Longitude;
+    public double Latitude;
+    public String Chat_title;
+    public String Chat_Dscrpn;
+    public String displayName;
 
-    public ChatroomResponse(int chat_id, int room_Admin, double longitude, double latitude, String chat_title, String chat_Dscrpn) {
+    public ChatroomResponse(int chat_id, int room_Admin, double longitude, double latitude, String chat_title, String chat_Dscrpn, String DisplayName) {
         this.chat_id = chat_id;
         Room_Admin = room_Admin;
         Longitude = longitude;
         Latitude = latitude;
         Chat_title = chat_title;
         Chat_Dscrpn = chat_Dscrpn;
+        displayName = DisplayName;
     }
 
     @Override
@@ -31,6 +33,4 @@ public class ChatroomResponse {
                 ", Chat_Dscrpn='" + Chat_Dscrpn + '\'' +
                 '}';
     }
-
-
 }

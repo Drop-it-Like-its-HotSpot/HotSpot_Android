@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.example.ticknardif.hotspot.R;
+import com.example.ticknardif.hotspot.RESTresponses.UserResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -22,8 +22,6 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 public class ChatroomActivity extends Activity {

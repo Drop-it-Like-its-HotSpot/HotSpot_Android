@@ -9,16 +9,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
+import com.example.ticknardif.hotspot.RESTresponses.LoginResponse;
 import com.example.ticknardif.hotspot.util.SystemUiHider;
-
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -42,7 +35,6 @@ public class AppStartActivity extends Activity {
         public void success(LoginResponse loginResponse, Response response) {
             if (loginResponse.success) {
                 Log.d("Debug", "AppStart: Logged in with user preferences");
-
                 Context context = getBaseContext();
                 SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();

@@ -1,10 +1,10 @@
-package com.example.ticknardif.hotspot;
+package com.example.ticknardif.hotspot.RESTresponses;
 
 public class UpdateLocationResponse {
-    int userId;
-    double longitude;
-    double latitude;
-    boolean success;
+    public int userId;
+    public double longitude;
+    public double latitude;
+    public boolean success;
 
     public UpdateLocationResponse(int userId, double longitude, double latitude, boolean success) {
         this.userId = userId;

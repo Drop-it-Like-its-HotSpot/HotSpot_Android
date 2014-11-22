@@ -1,20 +1,23 @@
 package com.example.ticknardif.hotspot;
 
+import com.example.ticknardif.hotspot.RESTresponses.ChatRoomCreationResponse;
+import com.example.ticknardif.hotspot.RESTresponses.ChatroomResponse;
+import com.example.ticknardif.hotspot.RESTresponses.ChatroomUserResponse;
+import com.example.ticknardif.hotspot.RESTresponses.JoinChatroomResponse;
+import com.example.ticknardif.hotspot.RESTresponses.LoginResponse;
+import com.example.ticknardif.hotspot.RESTresponses.LogoutResponse;
+import com.example.ticknardif.hotspot.RESTresponses.UpdateLocationResponse;
+import com.example.ticknardif.hotspot.RESTresponses.UserResponse;
+
 import java.util.List;
-import java.util.UUID;
 
 import retrofit.Callback;
-import retrofit.http.Body;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
-import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.Path;
 
-/**
- * Created by Vatsal on 11/2/2014.
- */
 public interface WebService {
     @FormUrlEncoded
     @POST("/api/login")

@@ -20,6 +20,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.ticknardif.hotspot.RESTresponses.ChatroomResponse;
+import com.example.ticknardif.hotspot.RESTresponses.ChatroomUserResponse;
+import com.example.ticknardif.hotspot.RESTresponses.JoinChatroomResponse;
+import com.example.ticknardif.hotspot.RESTresponses.LogoutResponse;
+import com.example.ticknardif.hotspot.RESTresponses.UpdateLocationResponse;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -94,7 +99,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
         private Chatroom responseToChatroom(ChatroomUserResponse response) {
             Log.d("Debug" , "Response is: " + response.toString());
-            return new Chatroom(response.chat_id, response.Room_Admin, response.latitude, response.longitude, response.Chat_title, response.Chat_Dscrpn);
+            return new Chatroom(response.chat_id, response.Room_Admin, response.Latitude, response.Longitude, response.Chat_title, response.Chat_Dscrpn);
         }
     };
 
@@ -118,7 +123,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         }
 
         private Chatroom responseToChatroom(ChatroomResponse response) {
-            Log.d("Debug" , "Response is: " + response.toString());
+            Log.d("Debug", "Response is: " + response.toString());
             return new Chatroom(response.chat_id, response.Room_Admin, response.Latitude, response.Longitude, response.Chat_title, response.Chat_Dscrpn);
         }
     };
