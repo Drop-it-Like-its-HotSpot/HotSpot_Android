@@ -29,12 +29,19 @@ public class ChatroomActivity extends Activity {
     private RestAdapter restAdapter;
     private  WebService webService;
     private String name;
+    private SharedPreferences sharedPref;
+    private int userId;
 
     private Callback<List<Message>> messageResponseCallback =  new Callback<List<Message>>() {
         @Override
         public void success(List<Message> chatroomList, Response response) {
             Log.d("Debug", "Loaded " + chatroomList.size() + " messages!");
             for(Message message : chatroomList) {
+                boolean myMessage = false;
+
+                // Set a flag if this message came from the current user
+                if(message.getUser_id() == userId) message.setOwned(true);
+
                 messageAdapter.add(message);
             }
         }
@@ -77,6 +84,9 @@ public class ChatroomActivity extends Activity {
 
         Bundle bundle = getIntent().getExtras();
         final int roomId = bundle.getInt("roomId");
+        final String chatroomName = bundle.getString("chatroomName");
+
+        getActionBar().setTitle(chatroomName);
 
         SharedPreferences sharedPref = getBaseContext().getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
         final String session = sharedPref.getString(getString(R.string.shared_pref_session_id), "No SessionID Set");
@@ -96,6 +106,8 @@ public class ChatroomActivity extends Activity {
         messageAdapter = new MessageListAdapter(getBaseContext(), R.layout.message_list_item);
         ListView messageListView = (ListView) findViewById(R.id.chat_message_list);
         messageListView.setAdapter(messageAdapter);
+        messageListView.setDivider(null);
+        messageListView.setDividerHeight(0);
 
         webService.getMessages(roomId, session, messageResponseCallback);
 
@@ -108,6 +120,10 @@ public class ChatroomActivity extends Activity {
                 webService.sendMessage(session, roomId, message, sendMessageCallback);
             }
         });
+
+        sharedPref = getBaseContext().getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
+
+        userId = sharedPref.getInt(getString(R.string.shared_pref_user_id), 0);
     }
 
     private void addMessage(Message message) {

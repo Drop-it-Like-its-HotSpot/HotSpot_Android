@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.ticknardif.hotspot"
-        minSdkVersion 14
+        minSdkVersion 17
         targetSdkVersion 20
         versionCode 1
         versionName "1.0"
@@ -21,7 +21,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:20.+'
     // You must install or update the Google Repository through the SDK manager to use this dependency.
     compile 'com.google.android.gms:play-services:5.+'
     compile 'com.squareup.retrofit:retrofit:1.2.2'

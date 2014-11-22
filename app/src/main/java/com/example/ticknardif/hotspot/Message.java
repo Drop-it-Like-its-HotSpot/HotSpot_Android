@@ -12,6 +12,7 @@ public class Message {
     private Date TimeStamp;
     private String Message;
     private boolean success;
+    boolean owned;
 
     public Message(String displayName, int m_id, int room_id, int user_id, Date timeStamp, String message, boolean success) {
         this.m_id = m_id;
@@ -21,6 +22,8 @@ public class Message {
         Message = message;
         this.success = success;
         this.DisplayName = displayName;
+
+        owned = false;
     }
 
     @Override
@@ -61,5 +64,9 @@ public class Message {
     }
     public void setDisplayName(String displayName) {
         DisplayName = displayName;
+    }
+
+    public void setOwned(boolean owned) {
+        this.owned = owned;
     }
 }

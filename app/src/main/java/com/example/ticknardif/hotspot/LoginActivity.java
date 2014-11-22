@@ -44,6 +44,7 @@ public class LoginActivity extends Activity {
 
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString(getString(R.string.shared_pref_session_id), loginResponse.session_id.toString());
+                editor.putInt(getString(R.string.shared_pref_user_id), loginResponse.user_id);
                 editor.apply();
 
                 startMainActivity(loginResponse.session_id);

@@ -1,39 +1,47 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#8196B0"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     tools:context="com.example.ticknardif.hotspot.ChatroomActivity">
 
-    <ListView
-        android:id="@+id/chat_message_list"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-    </ListView>
+        android:fillViewport="true"
+        android:layout_weight="0.9"
+    >
 
-    <RelativeLayout
-        android:layout_alignParentBottom="true"
+        <ListView
+            android:id="@+id/chat_message_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        </ListView>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_weight="0.1"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:background="#9FB9D9"
+        android:layout_width="fill_parent">
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/message_edit_text"
             android:layout_height="wrap_content"
-            android:layout_width="fill_parent">
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            />
 
-            <EditText
-                android:id="@+id/message_edit_text"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:layout_weight="1"
-                />
+        <Button
+            android:id="@+id/send_button"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Submit">
+        </Button>
 
-            <Button
-                android:id="@+id/send_button"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="Submit">
-            </Button>
-
-        </LinearLayout>
-    </RelativeLayout>
-</RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

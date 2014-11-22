@@ -156,7 +156,9 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
                     SharedPreferences sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString(getString(R.string.shared_pref_email), email);
+                    editor.putString(getString(R.string.shared_pref_session_id), loginResponse.session_id.toString());
                     editor.putString(getString(R.string.shared_pref_password), password);
+                    editor.putInt(getString(R.string.shared_pref_user_id), loginResponse.user_id);
                     editor.apply();
 
                     startMain(loginResponse.session_id);

@@ -93,6 +93,9 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
                 chatroomAdapter.add(chatroom);
                 addChatroomToMap(chatroom, true);
             }
+
+            // After we get the joined chatrooms, we can get all the other chatrooms
+            webService.getChatrooms(session, chatroomResponseCallback);
         }
         @Override
         public void failure(RetrofitError error) {
@@ -115,8 +118,14 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
                 Log.d("Debug", "Item is: " + item.toString());
 
                 Chatroom chatroom = responseToChatroom(item);
-                chatroomAdapter.add(chatroom);
-                addChatroomToMap(chatroom, false);
+
+                // Only add the chatroom if it doesn't already exist in the list
+                // Don't add it if the user is already a part of it
+                if(chatroomAdapter.getPosition(chatroom) < 0) {
+                    Log.d("Pins", "Adding a chatroom that the user is not a part of");
+                    chatroomAdapter.add(chatroom);
+                    addChatroomToMap(chatroom, false);
+                }
             }
         }
         @Override
@@ -184,6 +193,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
             Intent intent = new Intent(getBaseContext(), ChatroomActivity.class);
             intent.putExtra("roomId", chatroom.chat_id);
+            intent.putExtra("chatroomName", chatroom.title);
             startActivity(intent);
         }
     };
@@ -247,6 +257,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.main_map)).getMap();
+        map.clear();
         chatroomAdapter = new ChatroomListAdapter(getBaseContext(), R.layout.chatroom_list_item);
 
         // Create the chatroom overlay fragment
@@ -299,7 +310,6 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, locationListener, null);
 
         Log.d("Debug", "SessionID is: " + session);
-        webService.getChatrooms(session, chatroomResponseCallback);
         webService.getJoinedChatrooms(session, getJoinedChatroomCallback);
     }
 
@@ -311,7 +321,8 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         LatLng location = new LatLng(chatroom.getLat(), chatroom.getLng());
         String title = chatroom.getTitle();
 
-        int pindrop = alreadyJoined ? R.drawable.pindrop : R.drawable.green_pindrop;
+        int pindrop = alreadyJoined ? R.drawable.green_pindrop : R.drawable.pindrop;
+        Log.d("Pins", "Adding pin to map. Already Joined: " + alreadyJoined + ", Location: " + location.toString() + ", Title: " + title + ", Pindrop: " + pindrop);
 
         map.addMarker(new MarkerOptions().position(location).title(title).icon(BitmapDescriptorFactory.fromResource(pindrop)));
     }
