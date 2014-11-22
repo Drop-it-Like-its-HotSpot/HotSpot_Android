@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -32,6 +33,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -65,15 +67,15 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
     private Context context;
     private String regid;
     private RestAdapter restAdapter;
-    private  WebService webService;
+    private WebService webService;
 
     private GoogleMap map;
     private LatLng myLatLng;
-
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     private String session;
     private String email;
-
 
     private SharedPreferences sharedPref;
 
@@ -89,7 +91,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
                 Chatroom chatroom = responseToChatroom(item);
                 chatroomAdapter.add(chatroom);
-                addChatroomToMap(chatroom);
+                addChatroomToMap(chatroom, true);
             }
         }
         @Override
@@ -114,7 +116,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
                 Chatroom chatroom = responseToChatroom(item);
                 chatroomAdapter.add(chatroom);
-                addChatroomToMap(chatroom);
+                addChatroomToMap(chatroom, false);
             }
         }
         @Override
@@ -217,10 +219,33 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
 
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+    }
 
+    public void setLocation() {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
+    }
 
-        Bundle extras = getIntent().getExtras();
+    private boolean getLocationFromPreferences() {
+        boolean success = false;
+        Long lat = sharedPref.getLong("Latitude", 0);
+        Long lng = sharedPref.getLong("Longitude", 0);
+        if(lat != 0 && lng !=0) {
+            Log.d("Debug", "Retrieved GPS coordinates from SharedPreferences");
+            myLatLng = new LatLng(Double.longBitsToDouble(lat), Double.longBitsToDouble(lng));
+            success = true;
+        }
+
+        return success;
+    }
+
+    // You need to do the Play Services APK check here too.
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkPlayServices();
+
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
         map = ((MapFragment) getFragmentManager().findFragmentById(R.id.main_map)).getMap();
         chatroomAdapter = new ChatroomListAdapter(getBaseContext(), R.layout.chatroom_list_item);
 
@@ -244,11 +269,11 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
         // If there is a location stored in the preferences, center the map on it
         if(getLocationFromPreferences()) {
-           setLocation();
+            setLocation();
         }
 
         // Establish our location listener
-        LocationListener locationListener = new LocationListener() {
+        locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
@@ -278,38 +303,17 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         webService.getJoinedChatrooms(session, getJoinedChatroomCallback);
     }
 
-    public void setLocation() {
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
-    }
-
-    private boolean getLocationFromPreferences() {
-        boolean success = false;
-        Long lat = sharedPref.getLong("Latitude", 0);
-        Long lng = sharedPref.getLong("Longitude", 0);
-        if(lat != 0 && lng !=0) {
-            Log.d("Debug", "Retrieved GPS coordinates from SharedPreferences");
-            myLatLng = new LatLng(Double.longBitsToDouble(lat), Double.longBitsToDouble(lng));
-            success = true;
-        }
-
-        return success;
-    }
-
-    // You need to do the Play Services APK check here too.
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkPlayServices();
-    }
-
     public void setLocation(Location location) {
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
     }
 
-    private void addChatroomToMap(Chatroom chatroom) {
+    private void addChatroomToMap(Chatroom chatroom, boolean alreadyJoined) {
         LatLng location = new LatLng(chatroom.getLat(), chatroom.getLng());
         String title = chatroom.getTitle();
-        map.addMarker(new MarkerOptions().position(location).title(title).icon(BitmapDescriptorFactory.fromResource(R.drawable.pindrop)));
+
+        int pindrop = alreadyJoined ? R.drawable.pindrop : R.drawable.green_pindrop;
+
+        map.addMarker(new MarkerOptions().position(location).title(title).icon(BitmapDescriptorFactory.fromResource(pindrop)));
     }
 
     @Override
