@@ -5,30 +5,35 @@
 
     <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:minWidth="0dip"
+        android:layout_width="fill_parent"
         android:weightSum="1"
-        android:orientation="vertical"
-        android:padding="10dip"
-        android:id="@+id/message_wrapper"
-        android:background="@drawable/other_message_bg">
+        android:id="@+id/message_row">
 
-        <TextView
-            android:shadowRadius="20"
-            android:layout_height="0dp"
-            android:layout_width="wrap_content"
-            android:textSize="10dip"
-            android:includeFontPadding="false"
-            android:layout_weight="0.2"
-            android:id="@+id/message_sender_name" />
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dip"
+            android:minWidth="0dip"
+            android:orientation="vertical"
+            android:padding="10dip"
+            android:layout_weight="1.0"
+            android:id="@+id/message_wrapper"
+            android:background="@drawable/other_message_bg">
 
-        <TextView
-            android:layout_height="0dp"
-            android:layout_width="wrap_content"
-            android:layout_weight="0.6"
-            android:id="@+id/message_content" />
+            <TextView
+                android:shadowRadius="20"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:textSize="10dip"
+                android:includeFontPadding="false"
+                android:id="@+id/message_sender_name" />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:id="@+id/message_content" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
 
 </RelativeLayout>

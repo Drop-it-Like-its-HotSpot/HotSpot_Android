@@ -2,6 +2,7 @@ package com.example.ticknardif.hotspot;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.ticknardif.hotspot.RESTresponses.LogoutResponse;
 import com.example.ticknardif.hotspot.RESTresponses.UserResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,6 +33,9 @@ public class ChatroomActivity extends Activity {
     private String name;
     private SharedPreferences sharedPref;
     private int userId;
+    private int roomId;
+    private String session;
+
 
     private Callback<List<Message>> messageResponseCallback =  new Callback<List<Message>>() {
         @Override
@@ -83,13 +88,13 @@ public class ChatroomActivity extends Activity {
         setContentView(R.layout.activity_chatroom);
 
         Bundle bundle = getIntent().getExtras();
-        final int roomId = bundle.getInt("roomId");
+        roomId = bundle.getInt("roomId");
         final String chatroomName = bundle.getString("chatroomName");
 
         getActionBar().setTitle(chatroomName);
 
         SharedPreferences sharedPref = getBaseContext().getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
-        final String session = sharedPref.getString(getString(R.string.shared_pref_session_id), "No SessionID Set");
+        session = sharedPref.getString(getString(R.string.shared_pref_session_id), "No SessionID Set");
 
         // Create a converter for JSON timestamps to java.util.Date
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
@@ -144,9 +149,14 @@ public class ChatroomActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        if (id == R.id.leave_chatroom) {
+            return webService.leaveChatroom(roomId, session);
+        }
         if (id == R.id.action_settings) {
+            LogoutResponse.logout(this, webService);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

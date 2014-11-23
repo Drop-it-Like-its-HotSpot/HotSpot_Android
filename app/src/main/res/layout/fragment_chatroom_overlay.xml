@@ -2,12 +2,40 @@
     android:layout_width="match_parent"
     android:layout_height="200dip"
     android:minHeight="200dip"
+    android:weightSum="1"
+    android:orientation="vertical"
     android:maxHeight="200dip">
+
+    <LinearLayout
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+    >
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "Joined"
+            android:layout_weight="1"
+            style="?android:attr/borderlessButtonStyle"
+            android:onClick="showJoined"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "Nearby"
+            android:layout_weight="1"
+            style="?android:attr/borderlessButtonStyle"
+            android:onClick="showNearby"
+        />
+
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:fillViewport="true"
-        android:layout_height="match_parent">
+        android:layout_weight="1"
+        android:layout_height="fill_parent">
 
         <ListView
             xmlns:tools="http://schemas.android.com/tools"

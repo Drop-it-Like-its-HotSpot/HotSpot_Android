@@ -7,6 +7,7 @@ public class Chatroom {
     double lng;
     String title;
     String description;
+    boolean joined;
 
     /**
      * {@code Chatroom}
@@ -24,6 +25,7 @@ public class Chatroom {
         this.lng = lng;
         this.title = title;
         this.description = description;
+        this.joined = false;
     }
 
     public int getChat_id() {
@@ -49,4 +51,13 @@ public class Chatroom {
     public String getDescription() {
         return description;
     }
+
+    public boolean isJoined() {
+        return joined;
+    }
+
+    public void setJoined(boolean joined) {
+        this.joined = joined;
+    }
+
 }

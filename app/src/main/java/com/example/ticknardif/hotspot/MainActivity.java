@@ -90,6 +90,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
                 Log.d("Debug", "Item is: " + item.toString());
 
                 Chatroom chatroom = responseToChatroom(item);
+                chatroom.setJoined(true);
                 chatroomAdapter.add(chatroom);
                 addChatroomToMap(chatroom, true);
             }
@@ -150,20 +151,6 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
             Log.e("Debug", error.toString());
         }
     };
-
-
-    private Callback<LogoutResponse> logoutAPI = new Callback<LogoutResponse>(){
-
-        @Override
-        public void success(LogoutResponse logoutResponse, Response response) {
-            Log.d("Debug Server Logout: ", logoutResponse.toString());
-        }
-        @Override
-        public void failure(RetrofitError error) {
-            Log.e("Debug", error.toString());
-        }
-    };
-
 
     private Callback<UpdateLocationResponse> updateLocationCallback = new Callback<UpdateLocationResponse>() {
         @Override
@@ -333,6 +320,14 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         Log.d("Debug", "URI is :" + uri.toString());
     }
 
+    public void showNearby(View view) {
+        chatroomAdapter.toggleNearby();
+    }
+
+    public void showJoined(View view) {
+        chatroomAdapter.toggleJoined();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -347,8 +342,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            logout();
-            return true;
+            LogoutResponse.logout(this, webService);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -397,7 +391,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
     /**
      * @return Application's {@code SharedPreferences}.
      */
-    private SharedPreferences getGCMPreferences(Context context) {
+    public SharedPreferences getGCMPreferences(Context context) {
         // This sample app persists the registration ID in shared preferences, but
         // how you store the regID in your app is up to you.
         return getSharedPreferences(MainActivity.class.getSimpleName(),
@@ -499,26 +493,6 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
         }.execute(null, null, null);
 
-    }
-
-    public void logout() {
-
-        webService.logout(email, logoutAPI);
-        final SharedPreferences prefs = getGCMPreferences(context);
-
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.clear();
-        editor.commit();
-
-        SharedPreferences.Editor gcmEditor = prefs.edit();
-        gcmEditor.clear();
-        gcmEditor.commit();
-
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-
-        // Remove this activity from the Activity stack so the user cannot go back to this
-        finish();
     }
 }
 

@@ -66,11 +66,6 @@ public class MessageListAdapter extends ArrayAdapter<Message> {
                     // Set the background to our custom bg resource
                     wrapper.setBackground(getContext().getResources().getDrawable(R.drawable.my_message_bg));
 
-                    // Set this to be right-aligned
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(wrapper.getLayoutParams());
-                    params.addRule(RelativeLayout.ALIGN_PARENT_END);
-                    wrapper.setLayoutParams(params);
-
                     // Restore the padding
                     wrapper.setPaddingRelative(left, top, right, bottom);
                 }

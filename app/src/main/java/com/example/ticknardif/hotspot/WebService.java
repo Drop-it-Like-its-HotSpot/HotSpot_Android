@@ -9,14 +9,18 @@ import com.example.ticknardif.hotspot.RESTresponses.LogoutResponse;
 import com.example.ticknardif.hotspot.RESTresponses.UpdateLocationResponse;
 import com.example.ticknardif.hotspot.RESTresponses.UserResponse;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 import java.util.List;
 
 import retrofit.Callback;
+import retrofit.http.DELETE;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.http.RestMethod;
 
 public interface WebService {
     @FormUrlEncoded
@@ -61,6 +65,10 @@ public interface WebService {
     @FormUrlEncoded
     @POST("/api/chatroomusers/")
     void joinChatroom(@Field("room_id") int roomId, @Field("session_id") String sessionId, Callback<JoinChatroomResponse> res);
+
+    @FormUrlEncoded
+    @POST("/api/chatroomusers/delete")
+    boolean leaveChatroom(@Field("room_id") int roomId, @Field("session_id") String sessionId);
 
     @GET("/api/users/{session_id}")
     void getUser(@Path("session_id") String session_id, Callback<UserResponse> res);

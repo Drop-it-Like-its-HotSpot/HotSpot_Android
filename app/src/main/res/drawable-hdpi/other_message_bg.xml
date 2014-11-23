@@ -5,8 +5,7 @@ android:insetLeft="5dip"
 android:insetRight="5dip">
 
     <shape>
-        <solid android:color="#FFFFFF"/>
-        <stroke android:width="3dip" android:color="#323A44" />
+        <solid android:color="#D0B7E8"/>
         <corners android:radius="7dip"/>
         <padding android:bottom="0dip" android:left="0dip" android:right="0dip" android:top="0dip"/>
     </shape>
