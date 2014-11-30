@@ -1,18 +1,14 @@
 package com.example.ticknardif.hotspot;
 
-        import android.content.Context;
-        import android.graphics.drawable.Drawable;
-        import android.view.Gravity;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.AbsListView;
-        import android.widget.ArrayAdapter;
-        import android.widget.LinearLayout;
-        import android.widget.RelativeLayout;
-        import android.widget.TextView;
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
-        import java.util.List;
+import java.util.List;
 
 public class MessageListAdapter extends ArrayAdapter<Message> {
 
@@ -26,6 +22,8 @@ public class MessageListAdapter extends ArrayAdapter<Message> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        Log.d("Debug", "Getting View");
 
         View view = convertView;
 
@@ -53,22 +51,22 @@ public class MessageListAdapter extends ArrayAdapter<Message> {
                 sender_nameTV.setText(message.getDisplayName());
             }
 
-            if(message.owned) {
-                View wrapper = (View) view.findViewById(R.id.message_wrapper);
+            View wrapper = (View) view.findViewById(R.id.message_wrapper);
 
-                if(wrapper != null) {
-                    // Keep the padding that we set in the XML (overwriting the background overwrites this as well)
-                    int bottom = wrapper.getPaddingBottom();
-                    int top = wrapper.getPaddingTop();
-                    int left = wrapper.getPaddingLeft();
-                    int right = wrapper.getPaddingRight();
+            int backgroundDrawableId = message.owned ? R.drawable.my_message_bg : R.drawable.other_message_bg;
 
-                    // Set the background to our custom bg resource
-                    wrapper.setBackground(getContext().getResources().getDrawable(R.drawable.my_message_bg));
+            if(wrapper != null) {
+                // Keep the padding that we set in the XML (overwriting the background overwrites this as well)
+                int bottom = wrapper.getPaddingBottom();
+                int top = wrapper.getPaddingTop();
+                int left = wrapper.getPaddingLeft();
+                int right = wrapper.getPaddingRight();
 
-                    // Restore the padding
-                    wrapper.setPaddingRelative(left, top, right, bottom);
-                }
+                // Set the background to our custom bg resource
+                wrapper.setBackground(getContext().getResources().getDrawable(backgroundDrawableId));
+
+                // Restore the padding
+                wrapper.setPaddingRelative(left, top, right, bottom);
             }
         }
 

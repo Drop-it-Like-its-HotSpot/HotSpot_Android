@@ -16,8 +16,7 @@
             android:orientation="vertical"
             android:padding="10dip"
             android:layout_weight="1.0"
-            android:id="@+id/message_wrapper"
-            android:background="@drawable/other_message_bg">
+            android:id="@+id/message_wrapper" >
 
             <TextView
                 android:shadowRadius="20"
