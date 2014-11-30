@@ -2,13 +2,13 @@ package com.example.ticknardif.hotspot;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -18,13 +18,13 @@ import com.example.ticknardif.hotspot.RESTresponses.UserResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.List;
+
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
-
-import java.util.List;
 
 public class ChatroomActivity extends Activity {
     private MessageListAdapter messageAdapter;
@@ -70,10 +70,17 @@ public class ChatroomActivity extends Activity {
 
     private Callback<Message> sendMessageCallback =  new Callback<Message>() {
         @Override
-        public void success(Message chatroomList, Response response) {
-            chatroomList.setDisplayName(name);
-            messageAdapter.add(chatroomList);
+        public void success(Message message, Response response) {
+            message.setDisplayName(name);
+            message.setOwned(true);
+            messageAdapter.add(message);
             Log.d("Debug", "Message was sent successfully");
+
+            // Hide the input keyboard
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            EditText editTextView = (EditText) findViewById(R.id.message_edit_text);
+            editTextView.setText("");
         }
         @Override
         public void failure(RetrofitError error) {
