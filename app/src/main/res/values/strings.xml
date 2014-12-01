@@ -21,6 +21,7 @@
     <string name="create_account_email_invalid">Submitted email was not valid</string>
     <string name="create_account_username_invalid">Submitted username was not valid</string>
     <string name="create_account_password_invalid">Submitted password was not valid</string>
+    <string name="create_account_password_too_short">Password must have at least 6 characters</string>
     <string name="create_account_password_not_equal">Submitted passwords were not equal</string>
     <string name="create_account_email_exists_in_db">Submitted email is already taken</string>
     <string name="title_activity_create_account">Create Account</string>

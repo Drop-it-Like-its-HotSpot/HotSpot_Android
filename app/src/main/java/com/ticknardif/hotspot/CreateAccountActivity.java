@@ -110,6 +110,12 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
             errorOccurred = true;
         }
 
+        // If the password length is not at least 6 characters, do nothing
+        if(password.length() < 6) {
+            addErrorToList(getString(R.string.create_account_password_too_short));
+            errorOccurred = true;
+        }
+
         // If either of the passwords are null, do nothing
         if(password.equals("") || passwordRepeat.equals("")) {
             addErrorToList(getString(R.string.create_account_password_invalid));
@@ -128,7 +134,7 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
        //TODO:Use actual location for Longitude and Latitude
 
         //Create a user using Web Server and RetroFit
-        webService.createUser(email, password, username, 5.0 , 29.0 , -82.2, new Callback<UserResponse>() {
+        webService.createUser(email, password, username, 1.0 , 29.0 , -82.2, new Callback<UserResponse>() {
             @Override
             public void success(UserResponse user, Response response) {
                 if(user.success)
@@ -139,7 +145,9 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
                 else
                 {
                     Log.e("User", "User not created!! Please enter different Email ID");
-                    Log.e("Debug", response.toString());
+                    Log.e("Debug", response.getHeaders().toString());
+                    Log.e("Debug", response.getBody().toString());
+                    Log.e("Debug", Integer.toString(response.getStatus()));
                     addErrorToList(getString(R.string.create_account_email_invalid));
                     return;
                 }

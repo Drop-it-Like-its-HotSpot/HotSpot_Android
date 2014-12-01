@@ -98,6 +98,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         @Override
         public void success(List<ChatroomUserResponse> chatroomList, Response response) {
             Log.d("Debug", "Successful finding joined chatrooms");
+            chatroomAdapter.clear();
 
             for(ChatroomUserResponse item: chatroomList) {
                 Log.d("Debug", "Item is: " + item.toString());
@@ -341,19 +342,33 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         // Establish our location listener
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
+                boolean updateChatrooms = false;
                 myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-                // Set Location on the Google Map
-                setLocation();
 
                 // Update our location in the DB
                 webService.updateLocation(location.getLatitude(), location.getLongitude(), session, updateLocationCallback);
+
+                // If the user's updated location is too far from where it was loaded from the preferences, set a flag to update
+                // the chatrooms too
+                double latitude = Double.longBitsToDouble(sharedPref.getLong("Latitude", 0));
+                double longitude = Double.longBitsToDouble(sharedPref.getLong("Longitude", 0));
+                if(Math.abs(latitude - location.getLatitude()) > 0.2 || Math.abs(longitude - location.getLongitude()) > 0.2) {
+                    updateChatrooms = true;
+                }
 
                 // Save the location in our SharedPreferences
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putLong("Latitude", Double.doubleToRawLongBits(location.getLatitude()));
                 editor.putLong("Longitude", Double.doubleToRawLongBits(location.getLongitude()));
-                editor.apply();
+                editor.commit();
+
+                // Set Location on the Google Map
+                setLocation();
+
+                // Update the chatrooms if we flag it to do so
+                if(updateChatrooms) {
+                    webService.getJoinedChatrooms(session, getJoinedChatroomCallback);
+                }
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {}
