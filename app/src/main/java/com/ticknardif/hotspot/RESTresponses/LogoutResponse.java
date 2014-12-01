@@ -1,4 +1,4 @@
-package com.example.ticknardif.hotspot.RESTresponses;
+package com.ticknardif.hotspot.RESTresponses;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.example.ticknardif.hotspot.LoginActivity;
-import com.example.ticknardif.hotspot.MainActivity;
-import com.example.ticknardif.hotspot.R;
-import com.example.ticknardif.hotspot.WebService;
+import com.ticknardif.hotspot.LoginActivity;
+import com.ticknardif.hotspot.MainActivity;
+import com.ticknardif.hotspot.R;
+import com.ticknardif.hotspot.WebService;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;

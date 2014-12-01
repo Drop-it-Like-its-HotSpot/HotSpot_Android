@@ -1,4 +1,4 @@
-package com.example.ticknardif.hotspot;
+package com.ticknardif.hotspot;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,11 +17,11 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.example.ticknardif.hotspot.RESTresponses.LeaveChatroomResponse;
-import com.example.ticknardif.hotspot.RESTresponses.LogoutResponse;
-import com.example.ticknardif.hotspot.RESTresponses.UserResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.ticknardif.hotspot.RESTresponses.LeaveChatroomResponse;
+import com.ticknardif.hotspot.RESTresponses.LogoutResponse;
+import com.ticknardif.hotspot.RESTresponses.UserResponse;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ import retrofit.converter.GsonConverter;
 public class ChatroomActivity extends Activity {
     private MessageListAdapter messageAdapter;
     private RestAdapter restAdapter;
-    private  WebService webService;
+    private WebService webService;
     private String name;
     private SharedPreferences sharedPref;
     private int userId;

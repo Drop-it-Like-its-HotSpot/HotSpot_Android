@@ -1,4 +1,4 @@
-package com.example.ticknardif.hotspot;
+package com.ticknardif.hotspot;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -25,12 +25,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ticknardif.hotspot.RESTresponses.ChatroomResponse;
-import com.example.ticknardif.hotspot.RESTresponses.ChatroomUserResponse;
-import com.example.ticknardif.hotspot.RESTresponses.CreateChatroomResponse;
-import com.example.ticknardif.hotspot.RESTresponses.JoinChatroomResponse;
-import com.example.ticknardif.hotspot.RESTresponses.LogoutResponse;
-import com.example.ticknardif.hotspot.RESTresponses.UpdateLocationResponse;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -42,6 +36,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.ticknardif.hotspot.RESTresponses.ChatroomResponse;
+import com.ticknardif.hotspot.RESTresponses.ChatroomUserResponse;
+import com.ticknardif.hotspot.RESTresponses.CreateChatroomResponse;
+import com.ticknardif.hotspot.RESTresponses.JoinChatroomResponse;
+import com.ticknardif.hotspot.RESTresponses.LogoutResponse;
+import com.ticknardif.hotspot.RESTresponses.UpdateLocationResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;

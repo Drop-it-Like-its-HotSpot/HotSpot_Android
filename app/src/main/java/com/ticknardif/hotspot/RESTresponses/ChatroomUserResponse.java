@@ -1,4 +1,4 @@
-package com.example.ticknardif.hotspot.RESTresponses;
+package com.ticknardif.hotspot.RESTresponses;
 
 /**
  * Created by Vatsal on 11/8/2014.

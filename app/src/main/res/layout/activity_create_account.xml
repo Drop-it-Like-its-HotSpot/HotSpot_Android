@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:background="#323A44"
-    tools:context="com.example.ticknardif.hotspot.CreateAccountActivity">
+    tools:context="com.ticknardif.hotspot.CreateAccountActivity">
 
     <TextView
         android:layout_height="wrap_content"

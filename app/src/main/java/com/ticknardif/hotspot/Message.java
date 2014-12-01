@@ -1,4 +1,4 @@
-package com.example.ticknardif.hotspot;
+package com.ticknardif.hotspot;
 
 import java.util.Date;
 

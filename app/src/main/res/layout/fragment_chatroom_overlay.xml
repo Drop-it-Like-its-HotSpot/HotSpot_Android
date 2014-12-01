@@ -68,7 +68,7 @@
             android:orientation="vertical"
             android:background="#fff"
             android:id="@+id/chatroom_list"
-            tools:context="com.example.ticknardif.hotspot.ChatroomOverlay">
+            tools:context="com.ticknardif.hotspot.ChatroomOverlay">
         </ListView>
     </ScrollView>
 </LinearLayout>

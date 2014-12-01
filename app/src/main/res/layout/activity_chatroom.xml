@@ -7,7 +7,7 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     android:paddingTop="5dip"
-    tools:context="com.example.ticknardif.hotspot.ChatroomActivity">
+    tools:context="com.ticknardif.hotspot.ChatroomActivity">
 
     <ScrollView
         android:layout_width="match_parent"

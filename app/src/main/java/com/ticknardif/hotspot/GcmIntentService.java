@@ -1,4 +1,4 @@
-package com.example.ticknardif.hotspot;
+package com.ticknardif.hotspot;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
@@ -7,14 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.example.ticknardif.hotspot.RESTresponses.ChatroomUserResponse;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.ticknardif.hotspot.RESTresponses.ChatroomUserResponse;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class GcmIntentService extends IntentService {
     public static final int NOTIFICATION_ID = 1;
     private NotificationManager mNotificationManager;
     private RestAdapter restAdapter;
-    private  WebService webService;
+    private WebService webService;
     private int chatID;
     private String session;
     private String ChatRoomName;
@@ -57,7 +56,7 @@ public class GcmIntentService extends IntentService {
                 }
 
             }
-            sendNotification("Received New Message!!");
+            sendNotification("New Message in " + ChatRoomName);
         }
         @Override
         public void failure(RetrofitError error) {
@@ -155,10 +154,11 @@ public class GcmIntentService extends IntentService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("GCM Notification")
+                        .setSmallIcon(R.drawable.logo_bw)
+                        .setContentTitle("New Message")
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(msg))
+                        .setAutoCancel(true)
                         .setContentText(msg);
 
         mBuilder.setContentIntent(contentIntent);

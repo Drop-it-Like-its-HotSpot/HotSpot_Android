@@ -1,15 +1,15 @@
-package com.example.ticknardif.hotspot;
+package com.ticknardif.hotspot;
 
-import com.example.ticknardif.hotspot.RESTresponses.ChatRoomCreationResponse;
-import com.example.ticknardif.hotspot.RESTresponses.ChatroomResponse;
-import com.example.ticknardif.hotspot.RESTresponses.ChatroomUserResponse;
-import com.example.ticknardif.hotspot.RESTresponses.CreateChatroomResponse;
-import com.example.ticknardif.hotspot.RESTresponses.JoinChatroomResponse;
-import com.example.ticknardif.hotspot.RESTresponses.LeaveChatroomResponse;
-import com.example.ticknardif.hotspot.RESTresponses.LoginResponse;
-import com.example.ticknardif.hotspot.RESTresponses.LogoutResponse;
-import com.example.ticknardif.hotspot.RESTresponses.UpdateLocationResponse;
-import com.example.ticknardif.hotspot.RESTresponses.UserResponse;
+import com.ticknardif.hotspot.RESTresponses.ChatRoomCreationResponse;
+import com.ticknardif.hotspot.RESTresponses.ChatroomResponse;
+import com.ticknardif.hotspot.RESTresponses.ChatroomUserResponse;
+import com.ticknardif.hotspot.RESTresponses.CreateChatroomResponse;
+import com.ticknardif.hotspot.RESTresponses.JoinChatroomResponse;
+import com.ticknardif.hotspot.RESTresponses.LeaveChatroomResponse;
+import com.ticknardif.hotspot.RESTresponses.LoginResponse;
+import com.ticknardif.hotspot.RESTresponses.LogoutResponse;
+import com.ticknardif.hotspot.RESTresponses.UpdateLocationResponse;
+import com.ticknardif.hotspot.RESTresponses.UserResponse;
 
 import java.util.List;
 

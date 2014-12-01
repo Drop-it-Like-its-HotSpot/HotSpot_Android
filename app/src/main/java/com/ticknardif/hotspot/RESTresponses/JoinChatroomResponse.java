@@ -1,4 +1,4 @@
-package com.example.ticknardif.hotspot.RESTresponses;
+package com.ticknardif.hotspot.RESTresponses;
 
 import java.util.Date;
 

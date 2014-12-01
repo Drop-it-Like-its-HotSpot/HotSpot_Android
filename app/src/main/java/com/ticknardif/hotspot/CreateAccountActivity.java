@@ -1,4 +1,4 @@
-package com.example.ticknardif.hotspot;
+package com.ticknardif.hotspot;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,8 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ticknardif.hotspot.RESTresponses.LoginResponse;
-import com.example.ticknardif.hotspot.RESTresponses.UserResponse;
+import com.ticknardif.hotspot.RESTresponses.LoginResponse;
+import com.ticknardif.hotspot.RESTresponses.UserResponse;
 
 import java.util.UUID;
 
@@ -29,7 +29,7 @@ import retrofit.client.Response;
 public class CreateAccountActivity extends Activity implements View.OnFocusChangeListener {
     private ArrayAdapter adapter;
     private RestAdapter restAdapter;
-    private  WebService webService;
+    private WebService webService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

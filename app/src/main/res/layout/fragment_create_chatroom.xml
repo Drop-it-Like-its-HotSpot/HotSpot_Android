@@ -9,7 +9,7 @@
     android:textAlignment="center"
     android:orientation="vertical"
     android:background="@drawable/create_chatroom_bg"
-    tools:context="com.example.ticknardif.hotspot.CreateChatroomFragment">
+    tools:context="com.ticknardif.hotspot.CreateChatroomFragment">
 
     <TextView
         android:layout_height="wrap_content"

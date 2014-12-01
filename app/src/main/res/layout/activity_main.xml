@@ -7,7 +7,7 @@
         android:id="@+id/chatroom_overlay_fragment"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:name="com.example.ticknardif.hotspot.ChatroomOverlay" />
+        android:name="com.ticknardif.hotspot.ChatroomOverlay" />
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/main_map"

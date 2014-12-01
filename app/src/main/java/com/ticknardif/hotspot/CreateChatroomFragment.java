@@ -1,4 +1,4 @@
-package com.example.ticknardif.hotspot;
+package com.ticknardif.hotspot;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ChatroomOverlay.OnFragmentInteractionListener} interface
+ * {@link CreateChatroomFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ChatroomOverlay#newInstance} factory method to
+ * Use the {@link CreateChatroomFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ChatroomOverlay extends Fragment {
+public class CreateChatroomFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -35,11 +35,11 @@ public class ChatroomOverlay extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ChatroomOverlay.
+     * @return A new instance of fragment CreateChatroomFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ChatroomOverlay newInstance(String param1, String param2) {
-        ChatroomOverlay fragment = new ChatroomOverlay();
+    public static CreateChatroomFragment newInstance(String param1, String param2) {
+        CreateChatroomFragment fragment = new CreateChatroomFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -47,7 +47,7 @@ public class ChatroomOverlay extends Fragment {
         return fragment;
     }
 
-    public ChatroomOverlay() {
+    public CreateChatroomFragment() {
         // Required empty public constructor
     }
 
@@ -64,7 +64,7 @@ public class ChatroomOverlay extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chatroom_overlay, container, false);
+        return inflater.inflate(R.layout.fragment_create_chatroom, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

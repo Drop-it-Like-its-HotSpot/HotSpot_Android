@@ -1,4 +1,4 @@
-package com.example.ticknardif.hotspot;
+package com.ticknardif.hotspot;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,23 +12,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.example.ticknardif.hotspot.RESTresponses.LoginResponse;
-import com.example.ticknardif.hotspot.util.SystemUiHider;
+import com.ticknardif.hotspot.RESTresponses.LoginResponse;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- *
- * @see SystemUiHider
- */
 public class AppStartActivity extends Activity {
     private RestAdapter restAdapter;
-    private  WebService webService;
+    private WebService webService;
     private SharedPreferences sharedPref;
 
     // Create the AppStart login callback
