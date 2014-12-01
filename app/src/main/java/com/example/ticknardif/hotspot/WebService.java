@@ -3,6 +3,7 @@ package com.example.ticknardif.hotspot;
 import com.example.ticknardif.hotspot.RESTresponses.ChatRoomCreationResponse;
 import com.example.ticknardif.hotspot.RESTresponses.ChatroomResponse;
 import com.example.ticknardif.hotspot.RESTresponses.ChatroomUserResponse;
+import com.example.ticknardif.hotspot.RESTresponses.CreateChatroomResponse;
 import com.example.ticknardif.hotspot.RESTresponses.JoinChatroomResponse;
 import com.example.ticknardif.hotspot.RESTresponses.LeaveChatroomResponse;
 import com.example.ticknardif.hotspot.RESTresponses.LoginResponse;
@@ -48,6 +49,9 @@ public interface WebService {
     @GET("/api/chatroom/{session_id}")
     void getChatrooms(@Path("session_id") String session_id, Callback<List<ChatroomResponse>> res);
 
+    @FormUrlEncoded
+    @POST("/api/chatroom")
+    void createChatroom(@Field("room_admin") int roomAdmin, @Field("latitude") double latitude, @Field("longitude") double longitude, @Field("chat_title") String chat_title, @Field("chat_dscrpn") String chat_dscrpn, @Field("session_id") String session_id, Callback<CreateChatroomResponse> res);
 
     @FormUrlEncoded
     @POST("/api/messages")

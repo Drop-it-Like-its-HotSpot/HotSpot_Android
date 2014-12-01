@@ -1,0 +1,72 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="100dip"
+    android:layout_marginLeft="20dip"
+    android:layout_marginRight="20dip"
+    android:layout_gravity="center_horizontal"
+    android:textAlignment="center"
+    android:orientation="vertical"
+    android:background="@drawable/create_chatroom_bg"
+    tools:context="com.example.ticknardif.hotspot.CreateChatroomFragment">
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textSize="20dip"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:text="Create Chatroom"
+        >
+    </TextView>
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:hint="Chatroom Name"
+        android:id="@+id/create_chatroom_title"
+    >
+    </EditText>
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:hint="Chatroom Description"
+        android:id="@+id/create_chatroom_description"
+        >
+    </EditText>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+    >
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/create_chatroom_cancel"
+            android:text="Cancel"
+            android:textColor="#FFF"
+            android:layout_weight="1"
+            android:background="#E74C3C"
+            android:onClick="hideCreateChatroomFragment"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/create_chatroom_button"
+            android:text="Create Chatroom"
+            android:textColor="#FFF"
+            android:layout_weight="1"
+            android:background="#6C6"
+            android:padding="5dip"
+            android:onClick="createChatroom"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

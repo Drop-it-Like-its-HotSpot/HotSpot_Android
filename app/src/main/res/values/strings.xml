@@ -23,11 +23,9 @@
     <string name="create_account_password_invalid">Submitted password was not valid</string>
     <string name="create_account_password_not_equal">Submitted passwords were not equal</string>
     <string name="create_account_email_exists_in_db">Submitted email is already taken</string>
-    <string name="title_activity_create_account">HotSpot - Create Account</string>
-    <string name="title_activity_main">HotSpot - Chatroom Map</string>
+    <string name="title_activity_create_account">Create Account</string>
+    <string name="title_activity_main">HotSpot - Map</string>
     <string name="title_activity_app_start">AppStartActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_chatroom">ChatroomActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>

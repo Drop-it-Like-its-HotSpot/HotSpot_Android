@@ -5,4 +5,9 @@
         android:title="@string/logout"
         android:orderInCategory="100"
         android:showAsAction="never" />
+    <item android:id="@+id/create_chatroom"
+        android:icon="@drawable/ic_action_new"
+        android:title="Create New Chatroom"
+        android:showAsAction="always" />
+
 </menu>

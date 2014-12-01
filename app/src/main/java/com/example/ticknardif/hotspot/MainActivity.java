@@ -2,6 +2,7 @@ package com.example.ticknardif.hotspot;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,10 +19,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.ticknardif.hotspot.RESTresponses.ChatroomResponse;
 import com.example.ticknardif.hotspot.RESTresponses.ChatroomUserResponse;
+import com.example.ticknardif.hotspot.RESTresponses.CreateChatroomResponse;
 import com.example.ticknardif.hotspot.RESTresponses.JoinChatroomResponse;
 import com.example.ticknardif.hotspot.RESTresponses.LogoutResponse;
 import com.example.ticknardif.hotspot.RESTresponses.UpdateLocationResponse;
@@ -48,7 +52,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
-public class MainActivity extends Activity implements ChatroomOverlay.OnFragmentInteractionListener{
+public class MainActivity extends Activity implements ChatroomOverlay.OnFragmentInteractionListener, CreateChatroomFragment.OnFragmentInteractionListener{
 
     //Variables for registering with GCM
     public static final String EXTRA_MESSAGE = "message";
@@ -187,20 +191,51 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         }
     };
 
+    private Callback<CreateChatroomResponse> createChatroomCallback = new Callback<CreateChatroomResponse>() {
+        @Override
+        public void success(CreateChatroomResponse createChatroomResponse, Response response) {
+            if(createChatroomResponse.isSuccess()) {
+                Log.d("Debug", "Chatroom was created successfully");
+
+                // Go to the ChatroomActivity
+                enterChatroom(createChatroomResponse.getChat_id(), createChatroomResponse.getChat_title());
+            }
+            else {
+                String chatroomErrorString = "Chatroom was not able to be created";
+                Log.d("Debug", chatroomErrorString);
+
+                // Toast the user saying the chatroom was not able to be created
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, chatroomErrorString, duration);
+                toast.show();
+            }
+
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            Log.e("Debug", error.toString());
+        }
+    };
 
     AdapterView.OnItemClickListener chatroomClickListener = new AdapterView.OnItemClickListener(){
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Chatroom chatroom = (Chatroom) adapterView.getItemAtPosition(i);
 
-            webService.joinChatroom(chatroom.chat_id, session, joinChatroomResponseCallback);
-
-            Intent intent = new Intent(getBaseContext(), ChatroomActivity.class);
-            intent.putExtra("roomId", chatroom.chat_id);
-            intent.putExtra("chatroomName", chatroom.title);
-            startActivity(intent);
+            enterChatroom(chatroom.chat_id, chatroom.title);
         }
     };
+
+    public void enterChatroom(int chatId, String title) {
+        webService.joinChatroom(chatId, session, joinChatroomResponseCallback);
+
+        Intent intent = new Intent(getBaseContext(), ChatroomActivity.class);
+        intent.putExtra("roomId", chatId);
+        intent.putExtra("chatroomName", title);
+        startActivity(intent);
+    }
 
 
     @Override
@@ -419,6 +454,28 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         view.setBackgroundColor(inactiveBackgroundColor);
     }
 
+    private void showCreateChatroomFragment() {
+        Fragment chatroomCreationFragment = new CreateChatroomFragment();
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().add(android.R.id.content, chatroomCreationFragment).addToBackStack("CreateChatroom").commit();
+    }
+
+    public void createChatroom(View view) {
+        int roomAdmin = sharedPref.getInt(getString(R.string.shared_pref_user_id), 0);
+        double latitude = Double.longBitsToDouble(sharedPref.getLong("Latitude", 0));
+        double longitude = Double.longBitsToDouble(sharedPref.getLong("Longitude", 0));
+        String title = ((EditText) findViewById(R.id.create_chatroom_title)).getText().toString();
+        String description = ((EditText) findViewById(R.id.create_chatroom_description)).getText().toString();
+
+        webService.createChatroom(roomAdmin, latitude, longitude, title, description, session, createChatroomCallback);
+
+        hideCreateChatroomFragment(view);
+    }
+
+    public void hideCreateChatroomFragment(View view) {
+        getFragmentManager().popBackStack();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -432,8 +489,12 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            LogoutResponse.logout(this, webService);
+        switch(item.getItemId()) {
+            case R.id.action_settings:
+                LogoutResponse.logout(this, webService);
+                break;
+            case R.id.create_chatroom:
+                showCreateChatroomFragment();
         }
         return super.onOptionsItemSelected(item);
     }
