@@ -82,6 +82,7 @@
             android:onClick="createAccount"
             android:layout_width="fill_parent"
             android:background="@drawable/sign_in_button"
+            android:textColor="#FFF"
             android:layout_height="wrap_content" />
 
     </LinearLayout>

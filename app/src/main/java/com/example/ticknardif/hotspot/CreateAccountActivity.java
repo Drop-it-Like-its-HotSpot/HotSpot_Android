@@ -36,8 +36,12 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
 
-        TextView tv = (TextView) findViewById(R.id.create_account_text);
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Quicksand_Book.otf");
+        TextView tv = (TextView) findViewById(R.id.create_account_text);
+        tv.setTypeface(tf);
+
+        tf = Typeface.createFromAsset(getAssets(), "fonts/Quicksand_Bold.otf");
+        tv = (TextView) findViewById(R.id.create_account_submit);
         tv.setTypeface(tf);
 
         restAdapter = new RestAdapter.Builder()

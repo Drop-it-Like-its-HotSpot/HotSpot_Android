@@ -49,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.7"
             android:text="Enter"
+            android:textColor="#FFF"
             android:id="@+id/chatroom_enter_button"
             android:clickable="true"
             android:onClick="enterChatroomOnClick"

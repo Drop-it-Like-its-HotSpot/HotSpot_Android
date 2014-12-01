@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.example.ticknardif.hotspot.RESTresponses.LeaveChatroomResponse;
 import com.example.ticknardif.hotspot.RESTresponses.LogoutResponse;
@@ -107,6 +109,10 @@ public class ChatroomActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatroom);
+
+        TextView tv = (TextView) findViewById(R.id.send_button);
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Quicksand_Bold.otf");
+        tv.setTypeface(tf);
 
         Bundle bundle = getIntent().getExtras();
         roomId = bundle.getInt("roomId");

@@ -28,7 +28,7 @@
     <LinearLayout
         android:layout_weight="0.1"
         android:layout_height="wrap_content"
-        android:background="#9FB9D9"
+        android:background="@drawable/send_message_text_bg"
         android:layout_width="fill_parent">
 
         <EditText
@@ -42,7 +42,9 @@
             android:id="@+id/send_button"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="Submit">
+            android:textColor="#FFF"
+            android:background="@drawable/send_message_button_bg"
+            android:text="Send">
         </Button>
 
     </LinearLayout>

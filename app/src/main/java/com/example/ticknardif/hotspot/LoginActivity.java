@@ -77,6 +77,12 @@ public class LoginActivity extends Activity {
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Quicksand_Book.otf");
         tv.setTypeface(tf);
 
+        tf = Typeface.createFromAsset(getAssets(), "fonts/Quicksand_Bold.otf");
+        tv = (TextView) findViewById(R.id.sign_in_button);
+        tv.setTypeface(tf);
+        tv = (TextView) findViewById(R.id.go_to_create_account_button);
+        tv.setTypeface(tf);
+
         // Instantiate our REST API
         restAdapter = new RestAdapter.Builder()
                     .setServer("http://54.172.35.180:8080")

@@ -28,6 +28,7 @@
                 android:textColor="#fff"
                 android:layout_weight="1"
                 android:clickable="false"
+                android:id="@+id/join_toggle_button"
                 style="?android:attr/borderlessButtonStyle"
             />
 
@@ -47,6 +48,7 @@
                 android:textColor="#fff"
                 android:layout_weight="1"
                 android:clickable="false"
+                android:id="@+id/nearby_toggle_button"
                 style="?android:attr/borderlessButtonStyle"
                 />
         </RelativeLayout>

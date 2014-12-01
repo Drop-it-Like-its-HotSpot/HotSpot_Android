@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ticknardif.hotspot.RESTresponses.ChatroomResponse;
@@ -364,6 +366,13 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
         Log.d("Debug", "SessionID is: " + session);
         webService.getJoinedChatrooms(session, getJoinedChatroomCallback);
+
+        // Set the fonts of the top toggle buttons
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Quicksand_Bold.otf");
+        TextView tv = (TextView) findViewById(R.id.join_toggle_button);
+        tv.setTypeface(tf);
+        tv = (TextView) findViewById(R.id.nearby_toggle_button);
+        tv.setTypeface(tf);
     }
 
     public void setLocation(Location location) {

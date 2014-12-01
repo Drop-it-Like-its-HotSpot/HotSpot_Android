@@ -1,6 +1,7 @@
 package com.example.ticknardif.hotspot;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,14 +19,18 @@ public class ChatroomListAdapter extends ArrayAdapter<Chatroom> {
     boolean showNearby = true;
     boolean showJoined = true;
 
+    Typeface boldFont;
+
     public ChatroomListAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
         this.chatrooms = new ArrayList<Chatroom>();
+        boldFont = Typeface.createFromAsset(context.getAssets(), "fonts/Quicksand_Bold.otf");
     }
 
     public ChatroomListAdapter(Context context, int resource, List<Chatroom> chatrooms) {
         super(context, resource, chatrooms);
         this.chatrooms = chatrooms;
+        boldFont = Typeface.createFromAsset(context.getAssets(), "fonts/Quicksand_Bold.otf");
     }
 
     @Override
@@ -64,8 +69,8 @@ public class ChatroomListAdapter extends ArrayAdapter<Chatroom> {
             Button button = (Button) v.findViewById(R.id.chatroom_enter_button);
             String buttonText = chatroom.isJoined() ? "Enter" : "Join";
             button.setText(buttonText);
-
             button.setTag(chatroom);
+            button.setTypeface(boldFont);
         }
 
         return v;
