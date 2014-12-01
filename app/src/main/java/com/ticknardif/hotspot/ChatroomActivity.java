@@ -241,7 +241,9 @@ public class ChatroomActivity extends Activity {
                         extras.getString("Message"),
                         true
                 );
-                addMessage(msg);
+                if(roomId == Integer.parseInt(extras.getString("Room_id"))) {
+                    addMessage(msg);
+                }
                 setResultCode(Activity.RESULT_OK);
             }
             else
