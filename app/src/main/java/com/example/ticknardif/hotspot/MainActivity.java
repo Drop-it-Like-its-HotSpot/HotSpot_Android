@@ -236,8 +236,8 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         showingNearby = true;
         showingJoined = true;
 
-        activeBackgroundColor = 0xFF16A085;
-        inactiveBackgroundColor = 0xFF1CCCAA;
+        activeBackgroundColor = 0xFF69C48E;
+        inactiveBackgroundColor = 0xFFBCBCBC;
     }
 
     public void setLocation() {

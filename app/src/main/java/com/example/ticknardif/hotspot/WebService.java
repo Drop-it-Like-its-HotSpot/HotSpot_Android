@@ -4,23 +4,20 @@ import com.example.ticknardif.hotspot.RESTresponses.ChatRoomCreationResponse;
 import com.example.ticknardif.hotspot.RESTresponses.ChatroomResponse;
 import com.example.ticknardif.hotspot.RESTresponses.ChatroomUserResponse;
 import com.example.ticknardif.hotspot.RESTresponses.JoinChatroomResponse;
+import com.example.ticknardif.hotspot.RESTresponses.LeaveChatroomResponse;
 import com.example.ticknardif.hotspot.RESTresponses.LoginResponse;
 import com.example.ticknardif.hotspot.RESTresponses.LogoutResponse;
 import com.example.ticknardif.hotspot.RESTresponses.UpdateLocationResponse;
 import com.example.ticknardif.hotspot.RESTresponses.UserResponse;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 import java.util.List;
 
 import retrofit.Callback;
-import retrofit.http.DELETE;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
-import retrofit.http.RestMethod;
 
 public interface WebService {
     @FormUrlEncoded
@@ -68,7 +65,7 @@ public interface WebService {
 
     @FormUrlEncoded
     @POST("/api/chatroomusers/delete")
-    boolean leaveChatroom(@Field("room_id") int roomId, @Field("session_id") String sessionId);
+    void leaveChatroom(@Field("room_id") int roomId, @Field("session_id") String sessionId, Callback<LeaveChatroomResponse> res);
 
     @GET("/api/users/{session_id}")
     void getUser(@Path("session_id") String session_id, Callback<UserResponse> res);

@@ -2,6 +2,7 @@ package com.example.ticknardif.hotspot;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.ticknardif.hotspot.RESTresponses.LeaveChatroomResponse;
 import com.example.ticknardif.hotspot.RESTresponses.LogoutResponse;
 import com.example.ticknardif.hotspot.RESTresponses.UserResponse;
 import com.google.gson.Gson;
@@ -49,6 +51,15 @@ public class ChatroomActivity extends Activity {
 
                 messageAdapter.add(message);
             }
+        }
+        @Override
+        public void failure(RetrofitError error) {
+            Log.e("Debug", error.toString());
+        }
+    };
+    private Callback<LeaveChatroomResponse> leaveChatroomResponse =  new Callback<LeaveChatroomResponse>() {
+        @Override
+        public void success(LeaveChatroomResponse leaveChatroomResponse, Response response) {
         }
         @Override
         public void failure(RetrofitError error) {
@@ -157,7 +168,13 @@ public class ChatroomActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.leave_chatroom) {
-            return webService.leaveChatroom(roomId, session);
+            webService.leaveChatroom(roomId, session, leaveChatroomResponse);
+
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
+            // Remove this activity from the Activity stack so the user cannot go back to a left chatroom
+            finish();
         }
         if (id == R.id.action_settings) {
             LogoutResponse.logout(this, webService);

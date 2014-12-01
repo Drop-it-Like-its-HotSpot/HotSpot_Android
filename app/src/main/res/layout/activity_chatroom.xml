@@ -6,6 +6,7 @@
     android:background="#E4F1FE"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
+    android:paddingTop="5dip"
     tools:context="com.example.ticknardif.hotspot.ChatroomActivity">
 
     <ScrollView

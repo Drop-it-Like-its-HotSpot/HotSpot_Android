@@ -17,7 +17,7 @@
             android:layout_width="fill_parent"
             android:layout_gravity="center"
             android:textAlignment="center"
-            android:background="#16a085"
+            android:background="#69C48E"
             android:onClick="toggleJoined"
             android:layout_weight="1">
 
@@ -36,7 +36,7 @@
         <RelativeLayout
             android:layout_height="fill_parent"
             android:layout_width="fill_parent"
-            android:background="#16a085"
+            android:background="#69C48E"
             android:onClick="toggleNearby"
             android:layout_weight="1">
 
