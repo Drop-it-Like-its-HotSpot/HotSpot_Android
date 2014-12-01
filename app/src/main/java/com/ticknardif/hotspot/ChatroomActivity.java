@@ -1,8 +1,10 @@
 package com.ticknardif.hotspot;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -23,6 +25,9 @@ import com.ticknardif.hotspot.RESTresponses.LeaveChatroomResponse;
 import com.ticknardif.hotspot.RESTresponses.LogoutResponse;
 import com.ticknardif.hotspot.RESTresponses.UserResponse;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import retrofit.Callback;
@@ -40,6 +45,7 @@ public class ChatroomActivity extends Activity {
     private int userId;
     private int roomId;
     private String session;
+    private ChatroomGCMBroadcastReciever msgReciever;
 
     private ScrollView sv;
 
@@ -104,6 +110,25 @@ public class ChatroomActivity extends Activity {
         }
     };
 
+    //register your activity onResume()
+    @Override
+    public void onResume() {
+        super.onResume();
+        Context context = getApplicationContext();
+        IntentFilter msgintent = new IntentFilter();
+        msgintent.addAction("com.google.android.c2dm.intent.RECEIVE");
+        msgintent.addCategory("com.ticknardif.hotspot");
+        msgReciever = new ChatroomGCMBroadcastReciever();
+        context.registerReceiver(msgReciever,msgintent);
+    }
+
+    //Must unregister onPause()
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Context context = getApplicationContext();
+        context.unregisterReceiver(msgReciever);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +215,40 @@ public class ChatroomActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class ChatroomGCMBroadcastReciever extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle extras = intent.getExtras();
+            if(!extras.isEmpty()) {
+                Log.e("Chatroom GCM", extras.toString());
+                SimpleDateFormat postgres = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                Date timestamp = null;
+
+                try {
+                    timestamp = postgres.parse(extras.getString("TimeStamp"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                Message msg = new Message(
+                        extras.getString("DisplayName"),
+                        Integer.parseInt(extras.getString("m_id")),
+                        Integer.parseInt(extras.getString("Room_id")),
+                        Integer.parseInt(extras.getString("User_id")),
+                        timestamp,
+                        extras.getString("Message"),
+                        true
+                );
+                addMessage(msg);
+                setResultCode(Activity.RESULT_OK);
+            }
+            else
+            {
+                Log.e("Chatroom GCM", "Empty");
+            }
+        }
     }
 
 }

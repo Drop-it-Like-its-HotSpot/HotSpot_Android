@@ -39,6 +39,7 @@ import com.google.gson.GsonBuilder;
 import com.ticknardif.hotspot.RESTresponses.ChatroomResponse;
 import com.ticknardif.hotspot.RESTresponses.ChatroomUserResponse;
 import com.ticknardif.hotspot.RESTresponses.CreateChatroomResponse;
+import com.ticknardif.hotspot.RESTresponses.GCMResponse;
 import com.ticknardif.hotspot.RESTresponses.JoinChatroomResponse;
 import com.ticknardif.hotspot.RESTresponses.LogoutResponse;
 import com.ticknardif.hotspot.RESTresponses.UpdateLocationResponse;
