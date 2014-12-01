@@ -124,6 +124,7 @@ public class GcmIntentService extends IntentService {
                 Log.i("GCM Received: ", "Received: " + extras.toString());
             }
         }
+
         // Release the wake lock provided by the WakefulBroadcastReceiver.
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
@@ -146,6 +147,7 @@ public class GcmIntentService extends IntentService {
 
         Intent chat = new Intent(this, ChatroomActivity.class);
         chat.putExtras(data);
+        chat.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 chat, PendingIntent.FLAG_UPDATE_CURRENT);

@@ -214,6 +214,15 @@ public class ChatroomActivity extends Activity {
             LogoutResponse.logout(this, webService);
             return true;
         }
+        if (id == R.id.go_to_map) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+
+            // Remove this activity from the Activity stack so the user cannot go back to a left chatroom
+            finish();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 

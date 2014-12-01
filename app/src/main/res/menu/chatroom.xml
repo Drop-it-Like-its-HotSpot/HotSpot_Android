@@ -9,4 +9,8 @@
         android:title="@string/logout"
         android:orderInCategory="100"
         android:showAsAction="never" />
+    <item android:id="@+id/go_to_map"
+        android:icon="@drawable/ic_action_map"
+        android:title="Go To Map"
+        android:showAsAction="always" />
 </menu>
