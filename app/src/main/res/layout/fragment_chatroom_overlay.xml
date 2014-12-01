@@ -10,24 +10,46 @@
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
         android:orientation="horizontal"
-    >
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text = "Joined"
-            android:layout_weight="1"
-            style="?android:attr/borderlessButtonStyle"
-            android:onClick="showJoined"
+        android:id="@+id/tabs_layout">
+
+        <RelativeLayout
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:background="#16a085"
+            android:onClick="toggleJoined"
+            android:layout_weight="1">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text = "Joined"
+                android:textColor="#fff"
+                android:layout_weight="1"
+                android:clickable="false"
+                style="?android:attr/borderlessButtonStyle"
             />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text = "Nearby"
-            android:layout_weight="1"
-            style="?android:attr/borderlessButtonStyle"
-            android:onClick="showNearby"
-        />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:background="#16a085"
+            android:onClick="toggleNearby"
+            android:layout_weight="1">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text = "Nearby"
+                android:textColor="#fff"
+                android:layout_weight="1"
+                android:clickable="false"
+                style="?android:attr/borderlessButtonStyle"
+                />
+        </RelativeLayout>
 
     </LinearLayout>
 

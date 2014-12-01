@@ -48,22 +48,6 @@ public class ChatroomListAdapter extends ArrayAdapter<Chatroom> {
             }
         }
 
-        for(int i = 0; i < parent.getChildCount(); i++) {
-            parent.getChildAt(i).setVisibility(View.INVISIBLE);
-
-            if(showJoined) {
-                if (getItem(i).isJoined()) {
-                    parent.getChildAt(i).setVisibility(View.VISIBLE);
-                }
-
-            }
-            if(showNearby) {
-                if (!getItem(i).isJoined()) {
-                    parent.getChildAt(i).setVisibility(View.VISIBLE);
-                }
-            }
-        }
-
         return v;
     }
 

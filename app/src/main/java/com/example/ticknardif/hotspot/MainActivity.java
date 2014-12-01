@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 
 import com.example.ticknardif.hotspot.RESTresponses.ChatroomResponse;
 import com.example.ticknardif.hotspot.RESTresponses.ChatroomUserResponse;
@@ -33,7 +31,6 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -41,6 +38,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -81,6 +79,15 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
     private ChatroomListAdapter chatroomAdapter;
 
+    private List<Chatroom> joinedChatrooms;
+    private List<Chatroom> nearbyChatrooms;
+
+    private boolean showingNearby;
+    private boolean showingJoined;
+
+    private int activeBackgroundColor;
+    private int inactiveBackgroundColor;
+
     private Callback<List<ChatroomUserResponse>> getJoinedChatroomCallback =  new Callback<List<ChatroomUserResponse>>() {
         @Override
         public void success(List<ChatroomUserResponse> chatroomList, Response response) {
@@ -91,7 +98,12 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
                 Chatroom chatroom = responseToChatroom(item);
                 chatroom.setJoined(true);
+
+                // Add the item to our ListView adapter
                 chatroomAdapter.add(chatroom);
+
+                // Keep track of this chatroom in our local joinedChatroom list
+                joinedChatrooms.add(chatroom);
                 addChatroomToMap(chatroom, true);
             }
 
@@ -124,7 +136,12 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
                 // Don't add it if the user is already a part of it
                 if(chatroomAdapter.getPosition(chatroom) < 0) {
                     Log.d("Pins", "Adding a chatroom that the user is not a part of");
+
+                    // Add the item to our ListView adapter
                     chatroomAdapter.add(chatroom);
+
+                    // Keep track of this chatroom in our local nearbyChatroom list
+                    nearbyChatrooms.add(chatroom);
                     addChatroomToMap(chatroom, false);
                 }
             }
@@ -216,6 +233,11 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
 
+        showingNearby = true;
+        showingJoined = true;
+
+        activeBackgroundColor = 0xFF16A085;
+        inactiveBackgroundColor = 0xFF1CCCAA;
     }
 
     public void setLocation() {
@@ -256,6 +278,10 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
         // Set the chatroom onClickItemListener
         listView.setOnItemClickListener(chatroomClickListener);
+
+        // Instantiate our local list of chatrooms
+        joinedChatrooms = new ArrayList<Chatroom>();
+        nearbyChatrooms = new ArrayList<Chatroom>();
 
         // Get our shared Preferences
         sharedPref = context.getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
@@ -320,12 +346,77 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         Log.d("Debug", "URI is :" + uri.toString());
     }
 
-    public void showNearby(View view) {
-        chatroomAdapter.toggleNearby();
+    public void toggleNearby(View view) {
+        if(!showingNearby) {
+            for(Chatroom chatroom : nearbyChatrooms) {
+                chatroomAdapter.add(chatroom);
+                addChatroomToMap(chatroom, false);
+            }
+        }
+        else {
+            chatroomAdapter.clear();
+            map.clear();
+
+            if (showingJoined) {
+                for (Chatroom chatroom : joinedChatrooms) {
+                    chatroomAdapter.add(chatroom);
+                    addChatroomToMap(chatroom, true);
+                }
+            }
+        }
+
+        if(!showingNearby) {
+            setActiveBackgroundColor(view);
+        }
+        else {
+            setInactiveBackgroundColor(view);
+        }
+
+        showingNearby = !showingNearby;
     }
 
-    public void showJoined(View view) {
-        chatroomAdapter.toggleJoined();
+    public void toggleJoined(View view) {
+        if(showingJoined) {
+            chatroomAdapter.clear();
+            map.clear();
+        }
+
+        else {
+            for(Chatroom chatroom : joinedChatrooms) {
+                chatroomAdapter.add(chatroom);
+                addChatroomToMap(chatroom, true);
+            }
+        }
+
+        if(!showingJoined && showingNearby) {
+            for(Chatroom chatroom : joinedChatrooms) {
+                chatroomAdapter.add(chatroom);
+                addChatroomToMap(chatroom, true);
+            }
+        }
+        if(showingJoined && showingNearby) {
+            for(Chatroom chatroom : nearbyChatrooms) {
+                chatroomAdapter.add(chatroom);
+                addChatroomToMap(chatroom, false);
+            }
+        }
+
+        if(!showingJoined) {
+            setActiveBackgroundColor(view);
+        }
+        else {
+            setInactiveBackgroundColor(view);
+        }
+
+        showingJoined = !showingJoined;
+    }
+
+    private void setActiveBackgroundColor(View view) {
+        view.setBackgroundColor(activeBackgroundColor);
+    }
+
+    private void setInactiveBackgroundColor(View view) {
+        view.setBackgroundColor(inactiveBackgroundColor);
     }
 
     @Override
