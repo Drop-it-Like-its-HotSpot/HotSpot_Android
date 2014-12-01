@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -71,6 +72,10 @@ public class LoginActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        TextView tv = (TextView) findViewById(R.id.sign_in_text);
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Quicksand_Book.otf");
+        tv.setTypeface(tf);
 
         // Instantiate our REST API
         restAdapter = new RestAdapter.Builder()

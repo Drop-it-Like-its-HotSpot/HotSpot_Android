@@ -1,13 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.ticknardif.hotspot.MainActivity" >
-    <item android:id="@+id/action_settings"
-        android:title="@string/logout"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
     <item android:id="@+id/create_chatroom"
         android:icon="@drawable/ic_action_new"
         android:title="Create New Chatroom"
         android:showAsAction="always" />
-
+    <item android:id="@+id/refresh_chatrooms"
+        android:icon="@drawable/ic_action_refresh"
+        android:title="Refresh Chatrooms"
+        android:showAsAction="always" />
+    <item android:id="@+id/action_settings"
+        android:title="@string/logout"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
 </menu>

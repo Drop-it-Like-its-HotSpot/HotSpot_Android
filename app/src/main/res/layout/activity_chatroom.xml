@@ -14,6 +14,7 @@
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:layout_weight="0.9"
+        android:id="@+id/message_scrollView"
     >
             <ListView
                 android:id="@+id/chat_message_list"

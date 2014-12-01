@@ -1,7 +1,6 @@
 package com.example.ticknardif.hotspot;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +21,6 @@ public class MessageListAdapter extends ArrayAdapter<Message> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-        Log.d("Debug", "Getting View");
 
         View view = convertView;
 

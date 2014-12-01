@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ticknardif.hotspot.RESTresponses.LoginResponse;
@@ -33,6 +35,10 @@ public class CreateAccountActivity extends Activity implements View.OnFocusChang
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
+
+        TextView tv = (TextView) findViewById(R.id.create_account_text);
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Quicksand_Book.otf");
+        tv.setTypeface(tf);
 
         restAdapter = new RestAdapter.Builder()
                 .setServer("http://54.172.35.180:8080")

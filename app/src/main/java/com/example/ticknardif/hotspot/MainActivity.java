@@ -237,6 +237,11 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         startActivity(intent);
     }
 
+    public void enterChatroomOnClick(View view) {
+        Chatroom chatroom = (Chatroom) view.getTag();
+        enterChatroom(chatroom.getChat_id(), chatroom.getTitle());
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -476,6 +481,13 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         getFragmentManager().popBackStack();
     }
 
+    private void reloadActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        // Remove this activity from the Activity stack so the user cannot go back to this
+        finish();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -495,6 +507,10 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
                 break;
             case R.id.create_chatroom:
                 showCreateChatroomFragment();
+                break;
+            case R.id.refresh_chatrooms:
+                reloadActivity();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

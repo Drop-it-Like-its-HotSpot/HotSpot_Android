@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.example.ticknardif.hotspot.RESTresponses.LoginResponse;
 import com.example.ticknardif.hotspot.util.SystemUiHider;
@@ -65,6 +67,10 @@ public class AppStartActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_start);
+
+        TextView tv = (TextView) findViewById(R.id.fullscreen_content);
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Quicksand_Book.otf");
+        tv.setTypeface(tf);
 
         // Get the user information and last known location from SharedPreferences
         Context context = getBaseContext();

@@ -1,13 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.ticknardif.hotspot.ChatroomActivity" >
-    <item android:id="@+id/action_settings"
-        android:title="@string/logout"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
-
     <item android:id="@+id/leave_chatroom"
         android:title="Leave Chatroom"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/action_settings"
+        android:title="@string/logout"
         android:orderInCategory="100"
         android:showAsAction="never" />
 </menu>

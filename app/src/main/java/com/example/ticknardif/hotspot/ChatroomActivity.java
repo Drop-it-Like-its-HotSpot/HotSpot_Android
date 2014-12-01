@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ScrollView;
 
 import com.example.ticknardif.hotspot.RESTresponses.LeaveChatroomResponse;
 import com.example.ticknardif.hotspot.RESTresponses.LogoutResponse;
@@ -38,6 +39,7 @@ public class ChatroomActivity extends Activity {
     private int roomId;
     private String session;
 
+    private ScrollView sv;
 
     private Callback<List<Message>> messageResponseCallback =  new Callback<List<Message>>() {
         @Override
@@ -51,6 +53,7 @@ public class ChatroomActivity extends Activity {
 
                 messageAdapter.add(message);
             }
+
         }
         @Override
         public void failure(RetrofitError error) {
