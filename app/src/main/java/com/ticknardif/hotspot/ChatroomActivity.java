@@ -47,8 +47,6 @@ public class ChatroomActivity extends Activity {
     private String session;
     private ChatroomGCMBroadcastReciever msgReciever;
 
-    private ScrollView sv;
-
     private Callback<List<Message>> messageResponseCallback =  new Callback<List<Message>>() {
         @Override
         public void success(List<Message> chatroomList, Response response) {
@@ -61,7 +59,7 @@ public class ChatroomActivity extends Activity {
 
                 messageAdapter.add(message);
             }
-
+            scrollListToBottom();
         }
         @Override
         public void failure(RetrofitError error) {
@@ -96,6 +94,7 @@ public class ChatroomActivity extends Activity {
             message.setDisplayName(name);
             message.setOwned(true);
             messageAdapter.add(message);
+            scrollListToBottom();
             Log.d("Debug", "Message was sent successfully");
 
             // Hide the input keyboard
@@ -181,10 +180,23 @@ public class ChatroomActivity extends Activity {
         sharedPref = getBaseContext().getSharedPreferences(getString(R.string.shared_pref_file), Context.MODE_PRIVATE);
 
         userId = sharedPref.getInt(getString(R.string.shared_pref_user_id), 0);
+
+    }
+
+    public ScrollView getScrollView() {
+        return (ScrollView) findViewById(R.id.message_scrollView);
     }
 
     private void addMessage(Message message) {
         messageAdapter.add(message);
+
+        scrollListToBottom();
+    }
+
+    public void scrollListToBottom() {
+        ListView view = (ListView) findViewById(R.id.chat_message_list);
+        int distFromTop = (view == null) ? 0 : view.getBottom();
+        view.setSelection(distFromTop);
     }
 
 
