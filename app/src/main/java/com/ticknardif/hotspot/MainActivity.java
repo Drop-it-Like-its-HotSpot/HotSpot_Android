@@ -202,7 +202,7 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
                 Log.d("Debug", "Chatroom was created successfully");
 
                 // Go to the ChatroomActivity
-                enterChatroom(createChatroomResponse.getChat_id(), createChatroomResponse.getChat_title());
+                enterChatroom(createChatroomResponse.getChat_id(), createChatroomResponse.getChat_title(), false);
             }
             else {
                 String chatroomErrorString = "Chatroom was not able to be created";
@@ -227,13 +227,14 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
             Chatroom chatroom = (Chatroom) adapterView.getItemAtPosition(i);
+            boolean join = !chatroom.isJoined();
 
-            enterChatroom(chatroom.chat_id, chatroom.title);
+            enterChatroom(chatroom.chat_id, chatroom.title, join);
         }
     };
 
-    public void enterChatroom(int chatId, String title) {
-        webService.joinChatroom(chatId, session, joinChatroomResponseCallback);
+    public void enterChatroom(int chatId, String title, boolean join) {
+        if(join) webService.joinChatroom(chatId, session, joinChatroomResponseCallback);
 
         Intent intent = new Intent(getBaseContext(), ChatroomActivity.class);
         intent.putExtra("roomId", chatId);
@@ -243,7 +244,8 @@ public class MainActivity extends Activity implements ChatroomOverlay.OnFragment
 
     public void enterChatroomOnClick(View view) {
         Chatroom chatroom = (Chatroom) view.getTag();
-        enterChatroom(chatroom.getChat_id(), chatroom.getTitle());
+        boolean join = !chatroom.isJoined();
+        enterChatroom(chatroom.getChat_id(), chatroom.getTitle(), join);
     }
 
 
